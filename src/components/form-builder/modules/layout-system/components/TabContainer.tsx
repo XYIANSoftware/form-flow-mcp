@@ -29,16 +29,16 @@ interface TabContainerProps {
 }
 
 export default function TabContainer({
-	id,
+	// id,
 	title = 'Tab Container',
 	tabs,
 	onFieldSelect,
 	onFieldRemove,
-	onFieldMove,
-	onFieldAdd,
+	// onFieldMove,
+	// onFieldAdd,
 	onTabAdd,
 	onTabRemove,
-	onTabRename,
+	// onTabRename,
 	selectedFieldId,
 	className = '',
 }: TabContainerProps) {

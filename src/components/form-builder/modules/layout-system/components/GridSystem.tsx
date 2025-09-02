@@ -57,19 +57,19 @@ export default function GridSystem({
 		[fields]
 	)
 
-	const isPositionOccupied = useCallback(
-		(position: GridPosition): boolean => {
-			return fields.some(field => {
-				const fieldPos = getFieldPosition(field)
-				return (
-					fieldPos.row === position.row &&
-					fieldPos.col <= position.col &&
-					fieldPos.col + fieldPos.span > position.col
-				)
-			})
-		},
-		[fields, getFieldPosition]
-	)
+	// const isPositionOccupied = useCallback(
+	// 	(position: GridPosition): boolean => {
+	// 		return fields.some(field => {
+	// 			const fieldPos = getFieldPosition(field)
+	// 			return (
+	// 				fieldPos.row === position.row &&
+	// 				fieldPos.col <= position.col &&
+	// 				fieldPos.col + fieldPos.span > position.col
+	// 			)
+	// 		})
+	// 	},
+	// 	[fields, getFieldPosition]
+	// )
 
 	// const getNextAvailablePosition = useCallback(
 	// 	(startPosition: GridPosition): GridPosition => {

@@ -23,15 +23,15 @@ interface RowContainerProps {
 }
 
 export default function RowContainer({
-	id,
+	// id,
 	title = 'Row',
 	fields,
 	columns = 12,
 	gap = 16,
 	onFieldSelect,
 	onFieldRemove,
-	onFieldMove,
-	onFieldAdd,
+	// onFieldMove,
+	// onFieldAdd,
 	selectedFieldId,
 	className = '',
 }: RowContainerProps) {

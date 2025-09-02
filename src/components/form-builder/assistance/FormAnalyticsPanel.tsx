@@ -81,31 +81,31 @@ export default function FormAnalyticsPanel({
 		}
 	}, [form, fields, analyzeForm])
 
-	const getImpactColor = (impact: string) => {
-		switch (impact) {
-			case 'high':
-				return 'danger'
-			case 'medium':
-				return 'warning'
-			case 'low':
-				return 'info'
-			default:
-				return 'info'
-		}
-	}
+	// const getImpactColor = (impact: string) => {
+	// 	switch (impact) {
+	// 		case 'high':
+	// 			return 'danger'
+	// 		case 'medium':
+	// 			return 'warning'
+	// 		case 'low':
+	// 			return 'info'
+	// 		default:
+	// 			return 'info'
+	// 	}
+	// }
 
-	const getPerformanceColor = (performance: string) => {
-		switch (performance) {
-			case 'above':
-				return 'success'
-			case 'below':
-				return 'danger'
-			case 'at':
-				return 'info'
-			default:
-				return 'info'
-		}
-	}
+	// const getPerformanceColor = (performance: string) => {
+	// 	switch (performance) {
+	// 		case 'above':
+	// 			return 'success'
+	// 		case 'below':
+	// 			return 'danger'
+	// 		case 'at':
+	// 			return 'info'
+	// 		default:
+	// 			return 'info'
+	// 	}
+	// }
 
 	const chartData = {
 		labels: ['Desktop', 'Mobile', 'Tablet'],

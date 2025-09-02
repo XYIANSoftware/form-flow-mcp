@@ -38,7 +38,7 @@ export default function LayoutSystem({
 	onFieldRemove,
 	onFieldMove,
 	onFieldAdd,
-	onFieldsChange,
+	// onFieldsChange,
 	selectedFieldId,
 	className = '',
 }: LayoutSystemProps) {

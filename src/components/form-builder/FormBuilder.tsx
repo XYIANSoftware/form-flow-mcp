@@ -629,6 +629,22 @@ export default function FormBuilder({
 												/>
 											</div>
 
+											{/* Form Analytics */}
+											<div className='col-12 mb-4'>
+												<FormAnalyticsPanel
+													form={{
+														id: 'current-form',
+														title: 'Current Form',
+														description: 'Form being built',
+														fields: fields,
+														createdAt: new Date(),
+														updatedAt: new Date(),
+													}}
+													fields={fields}
+													className='h-full'
+												/>
+											</div>
+
 											{/* Template Intelligence */}
 											{/* <div className='col-12 lg:col-6 mb-4'>
 												<TemplateIntelligencePanel
