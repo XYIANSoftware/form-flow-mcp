@@ -35,8 +35,8 @@ export default function GridSystem({
 	fields,
 	onFieldSelect,
 	onFieldRemove,
-	onFieldMove,
-	onFieldAdd,
+	// onFieldMove,
+	// onFieldAdd,
 	selectedFieldId,
 	className = '',
 }: GridSystemProps) {
@@ -71,29 +71,29 @@ export default function GridSystem({
 		[fields, getFieldPosition]
 	)
 
-	const getNextAvailablePosition = useCallback(
-		(startPosition: GridPosition): GridPosition => {
-			let { row, col } = startPosition
+	// const getNextAvailablePosition = useCallback(
+	// 	(startPosition: GridPosition): GridPosition => {
+	// 		let { row, col } = startPosition
 
-			// Try to find next available position
-			while (row < 20) {
-				// Max 20 rows
-				while (col < GRID_COLUMNS) {
-					const testPosition = { row, col, span: 6 }
-					if (!isPositionOccupied(testPosition)) {
-						return testPosition
-					}
-					col += 6
-				}
-				row++
-				col = 0
-			}
+	// 		// Try to find next available position
+	// 		while (row < 20) {
+	// 			// Max 20 rows
+	// 			while (col < GRID_COLUMNS) {
+	// 				const testPosition = { row, col, span: 6 }
+	// 				if (!isPositionOccupied(testPosition)) {
+	// 					return testPosition
+	// 				}
+	// 				col += 6
+	// 			}
+	// 			row++
+	// 			col = 0
+	// 		}
 
-			// If no position found, return the start position
-			return startPosition
-		},
-		[isPositionOccupied]
-	)
+	// 		// If no position found, return the start position
+	// 		return startPosition
+	// 	},
+	// 	[isPositionOccupied]
+	// )
 
 	const renderGridLines = () => {
 		if (!showGrid) return null

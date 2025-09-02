@@ -17,8 +17,9 @@ import {
 	SmartSuggestionsPanel,
 	QualityDashboard,
 	ContextualHelpPanel,
-	TemplateIntelligencePanel,
-	SmartValidationPanel,
+	// TemplateIntelligencePanel,
+	// SmartValidationPanel,
+	FormAnalyticsPanel,
 } from './assistance'
 import { FieldSuggestion } from '@/lib/mcp/implementations/FieldMCP'
 import { FormImprovement } from '@/lib/mcp/implementations/FormMCP'
@@ -629,7 +630,7 @@ export default function FormBuilder({
 											</div>
 
 											{/* Template Intelligence */}
-											<div className='col-12 lg:col-6 mb-4'>
+											{/* <div className='col-12 lg:col-6 mb-4'>
 												<TemplateIntelligencePanel
 													fields={fields}
 													selectedField={selectedField}
@@ -643,10 +644,10 @@ export default function FormBuilder({
 													}}
 													className='h-full'
 												/>
-											</div>
+											</div> */}
 
 											{/* Smart Validation */}
-											<div className='col-12 lg:col-6 mb-4'>
+											{/* <div className='col-12 lg:col-6 mb-4'>
 												<SmartValidationPanel
 													fields={fields}
 													selectedField={selectedField}
@@ -660,7 +661,7 @@ export default function FormBuilder({
 													}}
 													className='h-full'
 												/>
-											</div>
+											</div> */}
 										</div>
 									) : (
 										<div className='text-center p-8'>

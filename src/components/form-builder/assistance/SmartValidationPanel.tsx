@@ -14,21 +14,25 @@ import {
 	FieldContext,
 	ValidationSuggestion,
 	FormValidationReport,
+	ValidationRule,
+	ValidationError,
+	ValidationWarning,
+	FieldValidationResult,
 } from '@/lib/mcp'
 
 interface SmartValidationPanelProps {
 	fields: FormField[]
 	selectedField: FormField | null
-	onValidationRuleAdd: (rule: any) => void
-	onValidationRuleUpdate: (rule: any) => void
+	onValidationRuleAdd: (rule: ValidationRule) => void
+	onValidationRuleUpdate: (rule: ValidationRule) => void
 	className?: string
 }
 
 export default function SmartValidationPanel({
 	fields,
-	selectedField,
+	// selectedField,
 	onValidationRuleAdd,
-	onValidationRuleUpdate,
+	// onValidationRuleUpdate,
 	className = '',
 }: SmartValidationPanelProps) {
 	const [loading, setLoading] = useState(false)
@@ -101,41 +105,41 @@ export default function SmartValidationPanel({
 		onValidationRuleAdd(rule)
 	}
 
-	const getSeverityColor = (severity: string) => {
-		switch (severity) {
-			case 'error':
-				return 'danger'
-			case 'warning':
-				return 'warning'
-			case 'info':
-				return 'info'
-			default:
-				return 'info'
-		}
-	}
+	// const getSeverityColor = (severity: string) => {
+	// 	switch (severity) {
+	// 		case 'error':
+	// 			return 'danger'
+	// 		case 'warning':
+	// 			return 'warning'
+	// 		case 'info':
+	// 			return 'info'
+	// 		default:
+	// 			return 'info'
+	// 	}
+	// }
 
-	const getValidationTypeIcon = (type: string) => {
-		switch (type) {
-			case 'required':
-				return 'pi-check-circle'
-			case 'email':
-				return 'pi-envelope'
-			case 'phone':
-				return 'pi-phone'
-			case 'url':
-				return 'pi-link'
-			case 'minLength':
-				return 'pi-align-left'
-			case 'maxLength':
-				return 'pi-align-left'
-			case 'pattern':
-				return 'pi-code'
-			case 'custom':
-				return 'pi-cog'
-			default:
-				return 'pi-shield'
-		}
-	}
+	// const getValidationTypeIcon = (type: string) => {
+	// 	switch (type) {
+	// 		case 'required':
+	// 			return 'pi-check-circle'
+	// 		case 'email':
+	// 			return 'pi-envelope'
+	// 		case 'phone':
+	// 			return 'pi-phone'
+	// 		case 'url':
+	// 			return 'pi-link'
+	// 		case 'minLength':
+	// 			return 'pi-align-left'
+	// 		case 'maxLength':
+	// 			return 'pi-align-left'
+	// 		case 'pattern':
+	// 			return 'pi-code'
+	// 		case 'custom':
+	// 			return 'pi-cog'
+	// 		default:
+	// 			return 'pi-shield'
+	// 	}
+	// }
 
 	return (
 		<Card className={`h-full ${className}`}>
@@ -220,9 +224,9 @@ export default function SmartValidationPanel({
 												<h4 className='text-sm font-medium text-red-400'>
 													Global Errors
 												</h4>
-												{validationReport.globalErrors.map((error, index) => (
+												{validationReport.globalErrors.map((error, _index) => (
 													<div
-														key={index}
+														key={_index}
 														className='flex items-center gap-2 text-xs text-red-300'
 													>
 														<i className='pi pi-times-circle' />
@@ -287,7 +291,7 @@ export default function SmartValidationPanel({
 
 						<TabPanel header='Field Analysis' leftIcon='pi pi-list'>
 							<div className='p-4 space-y-4'>
-								{validationReport?.fieldResults.map((result, index) => (
+								{validationReport?.fieldResults.map((result) => (
 									<FieldValidationCard
 										key={result.fieldId}
 										result={result}
@@ -354,7 +358,7 @@ function ValidationSuggestionCard({
 }
 
 interface FieldValidationCardProps {
-	result: any
+	result: FieldValidationResult
 	field?: FormField
 }
 
@@ -382,7 +386,7 @@ function FieldValidationCard({ result, field }: FieldValidationCardProps) {
 
 				{errors.length > 0 && (
 					<div className='space-y-1 mb-2'>
-						{errors.map((error: any, index: number) => (
+						{errors.map((error: ValidationError, index: number) => (
 							<div
 								key={index}
 								className='flex items-center gap-2 text-xs text-red-300'
@@ -396,7 +400,7 @@ function FieldValidationCard({ result, field }: FieldValidationCardProps) {
 
 				{warnings.length > 0 && (
 					<div className='space-y-1'>
-						{warnings.map((warning: any, index: number) => (
+						{warnings.map((warning: ValidationWarning, index: number) => (
 							<div
 								key={index}
 								className='flex items-center gap-2 text-xs text-yellow-300'

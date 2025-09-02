@@ -6,22 +6,22 @@ import { Card } from 'primereact/card'
 import { TabView, TabPanel } from 'primereact/tabview'
 import { FormField } from '@/types'
 
-interface FieldDependency {
-	id: string
-	sourceFieldId: string
-	targetFieldId: string
-	condition: string
-	value: string
-	action: string
-	actionValue: string
-	enabled: boolean
-}
+// interface FieldDependency {
+// 	id: string
+// 	sourceFieldId: string
+// 	targetFieldId: string
+// 	condition: string
+// 	value: string
+// 	action: string
+// 	actionValue: string
+// 	enabled: boolean
+// }
 
-interface FormStep {
-	id: string
-	title: string
-	fields: FormField[]
-}
+// interface FormStep {
+// 	id: string
+// 	title: string
+// 	fields: FormField[]
+// }
 import FileUploadField from './FileUploadField'
 import RichTextField from './RichTextField'
 import DateTimeField from './DateTimeField'

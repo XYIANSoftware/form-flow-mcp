@@ -13,19 +13,20 @@ import {
 	FormContext,
 	TemplateMatch,
 	TemplateSuggestion,
+	FormTemplate,
 } from '@/lib/mcp'
 
 interface TemplateIntelligencePanelProps {
 	fields: FormField[]
 	selectedField: FormField | null
-	onTemplateSelect: (template: any) => void
+	onTemplateSelect: (template: FormTemplate) => void
 	onSuggestionApply: (suggestion: TemplateSuggestion) => void
 	className?: string
 }
 
 export default function TemplateIntelligencePanel({
 	fields,
-	selectedField,
+	// selectedField,
 	onTemplateSelect,
 	onSuggestionApply,
 	className = '',
@@ -94,7 +95,7 @@ export default function TemplateIntelligencePanel({
 		}
 	}, [fields, analyzeTemplates])
 
-	const handleTemplateSelect = (template: any) => {
+	const handleTemplateSelect = (template: FormTemplate) => {
 		onTemplateSelect(template)
 	}
 
@@ -102,31 +103,31 @@ export default function TemplateIntelligencePanel({
 		onSuggestionApply(suggestion)
 	}
 
-	const getConfidenceColor = (confidence: string) => {
-		switch (confidence) {
-			case 'high':
-				return 'success'
-			case 'medium':
-				return 'warning'
-			case 'low':
-				return 'info'
-			default:
-				return 'info'
-		}
-	}
+	// const getConfidenceColor = (confidence: string) => {
+	// 	switch (confidence) {
+	// 		case 'high':
+	// 			return 'success'
+	// 		case 'medium':
+	// 			return 'warning'
+	// 		case 'low':
+	// 			return 'info'
+	// 		default:
+	// 			return 'info'
+	// 	}
+	// }
 
-	const getDifficultyColor = (difficulty: string) => {
-		switch (difficulty) {
-			case 'beginner':
-				return 'success'
-			case 'intermediate':
-				return 'warning'
-			case 'advanced':
-				return 'danger'
-			default:
-				return 'info'
-		}
-	}
+	// const getDifficultyColor = (difficulty: string) => {
+	// 	switch (difficulty) {
+	// 		case 'beginner':
+	// 			return 'success'
+	// 		case 'intermediate':
+	// 			return 'warning'
+	// 		case 'advanced':
+	// 			return 'danger'
+	// 		default:
+	// 			return 'info'
+	// 	}
+	// }
 
 	return (
 		<Card className={`h-full ${className}`}>
@@ -181,7 +182,7 @@ export default function TemplateIntelligencePanel({
 										</div>
 									</div>
 								) : (
-									templateMatches.map((match, index) => (
+									templateMatches.map((match) => (
 										<TemplateMatchCard
 											key={match.template.id}
 											match={match}
@@ -286,9 +287,9 @@ function TemplateMatchCard({ match, onSelect }: TemplateMatchCardProps) {
 				</div>
 
 				<div className='space-y-1'>
-					{reasons.map((reason, index) => (
+					{reasons.map((reason, _index) => (
 						<div
-							key={index}
+							key={_index}
 							className='flex items-center gap-2 text-xs text-gray-300'
 						>
 							<i className='pi pi-check text-green-400' />

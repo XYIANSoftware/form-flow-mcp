@@ -1,6 +1,6 @@
-'use client'
-
-import { MCPResult, MCPError, MCPLogger } from '../core'
+import { MCPResult, MCPError } from '../protocols/types'
+import { MCPLogger } from './logger'
+// import { FormField, Form } from '@/types'
 
 export interface ValidationRule {
 	id: string
@@ -452,16 +452,14 @@ export class SmartValidationMCP {
 	}
 
 	private validateRequired(
-		value: unknown,
-		rule: ValidationRule
+		value: unknown
 	): { isValid: boolean; suggestion?: string } {
 		const isValid = value !== null && value !== undefined && value !== ''
 		return { isValid }
 	}
 
 	private validateEmail(
-		value: unknown,
-		rule: ValidationRule
+		value: unknown
 	): { isValid: boolean; suggestion?: string } {
 		if (typeof value !== 'string') return { isValid: false }
 		const pattern = this.fieldPatterns.get('email')
@@ -470,8 +468,7 @@ export class SmartValidationMCP {
 	}
 
 	private validatePhone(
-		value: unknown,
-		rule: ValidationRule
+		value: unknown
 	): { isValid: boolean; suggestion?: string } {
 		if (typeof value !== 'string') return { isValid: false }
 		const pattern = this.fieldPatterns.get('phone')
@@ -555,18 +552,14 @@ export class SmartValidationMCP {
 	}
 
 	private validateCustom(
-		value: unknown,
-		rule: ValidationRule
+		_value: unknown
 	): { isValid: boolean; suggestion?: string } {
 		// Custom validation logic would be implemented here
 		// For now, return true as placeholder
 		return { isValid: true }
 	}
 
-	private evaluateConditions(
-		conditions: ValidationCondition[],
-		field: FieldContext
-	): boolean {
+	private evaluateConditions(): boolean {
 		// This would need access to other field values
 		// For now, return true as placeholder
 		return true
@@ -580,12 +573,12 @@ export class SmartValidationMCP {
 		const warnings: ValidationWarning[] = []
 
 		// Find cross-field rules
-		const crossFieldRules = rules.filter(rule => rule.type === 'crossField')
+		// const crossFieldRules = rules.filter(rule => rule.type === 'crossField')
 
-		for (const rule of crossFieldRules) {
-			// Implement cross-field validation logic
-			// This would check relationships between fields
-		}
+		// for (const rule of crossFieldRules) {
+		// 	// Implement cross-field validation logic
+		// 	// This would check relationships between fields
+		// }
 
 		return { errors, warnings }
 	}
@@ -598,12 +591,12 @@ export class SmartValidationMCP {
 		const warnings: ValidationWarning[] = []
 
 		// Find business logic rules
-		const businessRules = rules.filter(rule => rule.type === 'businessLogic')
+		// const businessRules = rules.filter(rule => rule.type === 'businessLogic')
 
-		for (const rule of businessRules) {
-			// Implement business logic validation
-			// This would check domain-specific rules
-		}
+		// for (const rule of businessRules) {
+		// 	// Implement business logic validation
+		// 	// This would check domain-specific rules
+		// }
 
 		return { errors, warnings }
 	}
@@ -771,8 +764,7 @@ export class SmartValidationMCP {
 
 		if (!field.userBehavior) return suggestions
 
-		const { timeSpent, attempts, corrections, helpRequests } =
-			field.userBehavior
+		const { attempts, corrections, helpRequests } = field.userBehavior
 
 		// High correction rate suggests validation issues
 		if (corrections > attempts * 0.3) {

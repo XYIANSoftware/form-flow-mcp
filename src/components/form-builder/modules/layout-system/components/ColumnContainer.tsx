@@ -23,15 +23,15 @@ interface ColumnContainerProps {
 }
 
 export default function ColumnContainer({
-	id,
+	// id,
 	title = 'Column',
 	fields,
-	width = 6,
+	// width = 6,
 	gap = 16,
 	onFieldSelect,
 	onFieldRemove,
-	onFieldMove,
-	onFieldAdd,
+	// onFieldMove,
+	// onFieldAdd,
 	selectedFieldId,
 	className = '',
 }: ColumnContainerProps) {

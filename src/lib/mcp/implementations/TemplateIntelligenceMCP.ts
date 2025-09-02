@@ -1,6 +1,7 @@
-'use client'
-
-import { MCPResult, MCPError, MCPLogger } from '../core'
+import { MCPResult, MCPError } from '../protocols/types'
+import { MCPLogger } from './logger'
+import { FormField } from '@/types'
+// import { Form } from '@/types'
 
 export interface FormTemplate {
 	id: string
@@ -951,8 +952,7 @@ export class TemplateIntelligenceMCP {
 	}
 
 	private identifyMissingValidation(
-		template: FormTemplate,
-		context: FormContext
+		template: FormTemplate
 	): ValidationRule[] {
 		const missing: ValidationRule[] = []
 
@@ -991,8 +991,7 @@ export class TemplateIntelligenceMCP {
 	}
 
 	private analyzeLayoutOptimization(
-		template: FormTemplate,
-		context: FormContext
+		template: FormTemplate
 	): TemplateSuggestion | null {
 		if (template.fields.length > 10 && template.layout === 'vertical') {
 			return {
