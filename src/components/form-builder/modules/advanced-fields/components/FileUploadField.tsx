@@ -31,7 +31,7 @@ export default function FileUploadField({
 	field,
 	onFieldUpdate,
 	onFieldRemove,
-	selectedFieldId,
+	// selectedFieldId,
 	className = '',
 }: FileUploadFieldProps) {
 	const [uploading, setUploading] = useState(false)
@@ -64,7 +64,7 @@ export default function FileUploadField({
 		[field, onFieldUpdate]
 	)
 
-	const handleFileUpload = useCallback((event: any) => {
+	const handleFileUpload = useCallback((event: { files: FileList }) => {
 		const files = Array.from(event.files) as File[]
 		setUploading(true)
 		setUploadProgress(0)

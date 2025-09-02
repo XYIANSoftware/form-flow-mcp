@@ -29,7 +29,7 @@ interface APIIntegrationProps {
 }
 
 export default function APIIntegration({
-	fields,
+	// fields,
 	onConnectionsChange,
 	className = '',
 }: APIIntegrationProps) {
@@ -64,10 +64,10 @@ export default function APIIntegration({
 		{ label: 'API Key', value: 'api-key' },
 	]
 
-	const fieldOptions = fields.map(field => ({
-		label: field.label,
-		value: field.id,
-	}))
+	// const fieldOptions = fields.map(field => ({
+	// 	label: field.label,
+	// 	value: field.id,
+	// }))
 
 	const handleAddConnection = useCallback(() => {
 		if (!newConnection.name || !newConnection.url) return

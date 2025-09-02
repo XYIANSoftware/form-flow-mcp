@@ -29,16 +29,16 @@ interface AccordionContainerProps {
 }
 
 export default function AccordionContainer({
-	id,
+	// id,
 	title = 'Accordion Container',
 	sections,
 	onFieldSelect,
 	onFieldRemove,
-	onFieldMove,
-	onFieldAdd,
+	// onFieldMove,
+	// onFieldAdd,
 	onSectionAdd,
 	onSectionRemove,
-	onSectionRename,
+	// onSectionRename,
 	selectedFieldId,
 	className = '',
 }: AccordionContainerProps) {

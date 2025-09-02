@@ -1087,7 +1087,10 @@ export class FieldMCP {
 			console.log('📊 Current fields:', currentFields.length)
 			console.log('🎯 Context purpose:', context.purpose)
 
-			const suggestions = FieldMCP.generateFieldSuggestions(currentFields, context)
+			const suggestions = FieldMCP.generateFieldSuggestions(
+				currentFields,
+				context
+			)
 
 			const result: MCPResult<FieldSuggestion[]> = {
 				success: true,
@@ -1177,7 +1180,9 @@ export class FieldMCP {
 	/**
 	 * Suggests validation rules for a field
 	 */
-	static suggestValidationRules(field: FormField): MCPResult<ValidationSuggestion[]> {
+	static suggestValidationRules(
+		field: FormField
+	): MCPResult<ValidationSuggestion[]> {
 		const tracker = MCPLogger.createPerformanceTracker('suggestValidationRules')
 
 		try {
@@ -1224,8 +1229,12 @@ export class FieldMCP {
 	/**
 	 * Detects validation conflicts between fields
 	 */
-	static detectValidationConflicts(fields: FormField[]): MCPResult<ValidationConflict[]> {
-		const tracker = MCPLogger.createPerformanceTracker('detectValidationConflicts')
+	static detectValidationConflicts(
+		fields: FormField[]
+	): MCPResult<ValidationConflict[]> {
+		const tracker = MCPLogger.createPerformanceTracker(
+			'detectValidationConflicts'
+		)
 
 		try {
 			console.log('⚠️ FieldMCP: Detecting validation conflicts...')
@@ -1376,12 +1385,16 @@ export class FieldMCP {
 		const existingLabels = currentFields.map(f => f.label?.toLowerCase() || '')
 
 		// Suggest missing common fields
-		if (!existingFieldTypes.includes('email') && !existingLabels.some(l => l.includes('email'))) {
+		if (
+			!existingFieldTypes.includes('email') &&
+			!existingLabels.some(l => l.includes('email'))
+		) {
 			suggestions.push({
 				id: generateId(),
 				type: 'field',
 				title: 'Add Email Field',
-				description: 'Email fields are commonly needed for contact and registration forms',
+				description:
+					'Email fields are commonly needed for contact and registration forms',
 				field: {
 					id: generateId(),
 					type: 'email',
@@ -1394,7 +1407,10 @@ export class FieldMCP {
 			})
 		}
 
-		if (!existingFieldTypes.includes('phone') && !existingLabels.some(l => l.includes('phone'))) {
+		if (
+			!existingFieldTypes.includes('phone') &&
+			!existingLabels.some(l => l.includes('phone'))
+		) {
 			suggestions.push({
 				id: generateId(),
 				type: 'field',
@@ -1413,7 +1429,10 @@ export class FieldMCP {
 		}
 
 		// Suggest based on form purpose
-		if (context.purpose === 'contact' && !existingFieldTypes.includes('textarea')) {
+		if (
+			context.purpose === 'contact' &&
+			!existingFieldTypes.includes('textarea')
+		) {
 			suggestions.push({
 				id: generateId(),
 				type: 'field',
@@ -1439,7 +1458,8 @@ export class FieldMCP {
 					id: generateId(),
 					type: 'grouping',
 					title: 'Group Related Fields',
-					description: 'Consider grouping related fields for better organization',
+					description:
+						'Consider grouping related fields for better organization',
 					grouping: grouping[0],
 					confidence: 0.8,
 					impact: 'medium',
@@ -1453,38 +1473,80 @@ export class FieldMCP {
 	/**
 	 * Analyzes field name to suggest appropriate type
 	 */
-	private static analyzeFieldName(fieldName: string, context: FormContext): FieldType {
+	private static analyzeFieldName(
+		fieldName: string,
+		_context: FormContext
+	): FieldType {
 		const name = fieldName.toLowerCase()
 
 		// Email detection
 		if (name.includes('email') || name.includes('e-mail')) return 'email'
 
 		// Phone detection
-		if (name.includes('phone') || name.includes('mobile') || name.includes('telephone')) return 'phone'
+		if (
+			name.includes('phone') ||
+			name.includes('mobile') ||
+			name.includes('telephone')
+		)
+			return 'phone'
 
 		// Name detection
 		if (name.includes('name') && !name.includes('company')) return 'text'
 
 		// Address detection
-		if (name.includes('address') || name.includes('street') || name.includes('location')) return 'address'
+		if (
+			name.includes('address') ||
+			name.includes('street') ||
+			name.includes('location')
+		)
+			return 'address'
 
 		// Date detection
-		if (name.includes('date') || name.includes('birth') || name.includes('dob')) return 'date'
+		if (name.includes('date') || name.includes('birth') || name.includes('dob'))
+			return 'date'
 
 		// Number detection
-		if (name.includes('age') || name.includes('count') || name.includes('quantity')) return 'number'
+		if (
+			name.includes('age') ||
+			name.includes('count') ||
+			name.includes('quantity')
+		)
+			return 'number'
 
 		// Money detection
-		if (name.includes('price') || name.includes('cost') || name.includes('amount') || name.includes('salary')) return 'money'
+		if (
+			name.includes('price') ||
+			name.includes('cost') ||
+			name.includes('amount') ||
+			name.includes('salary')
+		)
+			return 'money'
 
 		// URL detection
-		if (name.includes('website') || name.includes('url') || name.includes('link')) return 'url'
+		if (
+			name.includes('website') ||
+			name.includes('url') ||
+			name.includes('link')
+		)
+			return 'url'
 
 		// Textarea detection
-		if (name.includes('message') || name.includes('comment') || name.includes('description') || name.includes('notes')) return 'textarea'
+		if (
+			name.includes('message') ||
+			name.includes('comment') ||
+			name.includes('description') ||
+			name.includes('notes')
+		)
+			return 'textarea'
 
 		// File detection
-		if (name.includes('file') || name.includes('document') || name.includes('attachment') || name.includes('resume')) return 'file'
+		if (
+			name.includes('file') ||
+			name.includes('document') ||
+			name.includes('attachment') ||
+			name.includes('resume')
+		)
+			return 'file'
 
 		// Default to text
 		return 'text'
@@ -1493,11 +1555,18 @@ export class FieldMCP {
 	/**
 	 * Generates validation suggestions for a field
 	 */
-	private static generateValidationSuggestions(field: FormField): ValidationSuggestion[] {
+	private static generateValidationSuggestions(
+		field: FormField
+	): ValidationSuggestion[] {
 		const suggestions: ValidationSuggestion[] = []
 
 		// Required field suggestion
-		if (!field.required && ['email', 'phone', 'name'].some(type => field.label?.toLowerCase().includes(type))) {
+		if (
+			!field.required &&
+			['email', 'phone', 'name'].some(type =>
+				field.label?.toLowerCase().includes(type)
+			)
+		) {
 			suggestions.push({
 				rule: 'required',
 				message: `${field.label} is required`,
@@ -1549,15 +1618,21 @@ export class FieldMCP {
 	/**
 	 * Analyzes validation conflicts between fields
 	 */
-	private static analyzeValidationConflicts(fields: FormField[]): ValidationConflict[] {
+	private static analyzeValidationConflicts(
+		fields: FormField[]
+	): ValidationConflict[] {
 		const conflicts: ValidationConflict[] = []
 
 		// Check for duplicate field labels
 		const labels = fields.map(f => f.label?.toLowerCase().trim() || '')
-		const duplicates = labels.filter((label, index) => labels.indexOf(label) !== index && label !== '')
+		const duplicates = labels.filter(
+			(label, index) => labels.indexOf(label) !== index && label !== ''
+		)
 
 		duplicates.forEach(duplicate => {
-			const conflictingFields = fields.filter(f => f.label?.toLowerCase().trim() === duplicate)
+			const conflictingFields = fields.filter(
+				f => f.label?.toLowerCase().trim() === duplicate
+			)
 			conflicts.push({
 				fieldId: conflictingFields[0].id,
 				conflictType: 'required',
@@ -1569,13 +1644,17 @@ export class FieldMCP {
 		// Check for conflicting validation rules
 		fields.forEach(field => {
 			if (field.validation) {
-				if (field.validation.min !== undefined && field.validation.max !== undefined) {
+				if (
+					field.validation.min !== undefined &&
+					field.validation.max !== undefined
+				) {
 					if (field.validation.min > field.validation.max) {
 						conflicts.push({
 							fieldId: field.id,
 							conflictType: 'range',
 							conflict: 'Minimum value is greater than maximum value',
-							suggestion: 'Adjust min/max values so minimum is less than maximum',
+							suggestion:
+								'Adjust min/max values so minimum is less than maximum',
 						})
 					}
 				}
@@ -1656,8 +1735,8 @@ export class FieldMCP {
 		const groupings: FieldGrouping[] = []
 
 		// Personal information grouping
-		const personalFields = fields.filter(f => 
-			['name', 'first', 'last', 'email', 'phone'].some(keyword => 
+		const personalFields = fields.filter(f =>
+			['name', 'first', 'last', 'email', 'phone'].some(keyword =>
 				f.label?.toLowerCase().includes(keyword)
 			)
 		)
@@ -1666,13 +1745,14 @@ export class FieldMCP {
 				groupId: generateId(),
 				groupName: 'Personal Information',
 				fields: personalFields.map(f => f.id),
-				reason: 'Group personal information fields together for better organization',
+				reason:
+					'Group personal information fields together for better organization',
 			})
 		}
 
 		// Contact information grouping
-		const contactFields = fields.filter(f => 
-			['address', 'city', 'state', 'zip', 'country'].some(keyword => 
+		const contactFields = fields.filter(f =>
+			['address', 'city', 'state', 'zip', 'country'].some(keyword =>
 				f.label?.toLowerCase().includes(keyword)
 			)
 		)
@@ -1686,8 +1766,8 @@ export class FieldMCP {
 		}
 
 		// Preferences grouping
-		const preferenceFields = fields.filter(f => 
-			['preference', 'option', 'choice', 'interest'].some(keyword => 
+		const preferenceFields = fields.filter(f =>
+			['preference', 'option', 'choice', 'interest'].some(keyword =>
 				f.label?.toLowerCase().includes(keyword)
 			)
 		)

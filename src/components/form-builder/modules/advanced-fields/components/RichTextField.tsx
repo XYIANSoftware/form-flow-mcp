@@ -5,7 +5,7 @@ import { Card } from 'primereact/card'
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
 import { Checkbox } from 'primereact/checkbox'
-import { Dropdown } from 'primereact/dropdown'
+// import { Dropdown } from 'primereact/dropdown'
 import { FormField } from '@/types'
 
 interface RichTextFieldProps {
@@ -30,7 +30,7 @@ export default function RichTextField({
 	field,
 	onFieldUpdate,
 	onFieldRemove,
-	selectedFieldId,
+	// selectedFieldId,
 	className = '',
 }: RichTextFieldProps) {
 	const [content, setContent] = useState(field.defaultValue || '')

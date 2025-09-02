@@ -26,7 +26,7 @@ interface AnalyticsSystemProps {
 }
 
 export default function AnalyticsSystem({
-	fields,
+	// fields,
 	onConfigChange,
 	className = '',
 }: AnalyticsSystemProps) {
@@ -42,7 +42,7 @@ export default function AnalyticsSystem({
 		exportFormat: 'json',
 	})
 
-	const [analyticsData, setAnalyticsData] = useState({
+	const [analyticsData] = useState({
 		totalViews: 1247,
 		totalSubmissions: 89,
 		completionRate: 7.1,

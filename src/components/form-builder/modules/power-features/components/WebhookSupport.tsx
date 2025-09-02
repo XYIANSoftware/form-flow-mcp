@@ -7,7 +7,7 @@ import { InputText } from 'primereact/inputtext'
 import { InputTextarea } from 'primereact/inputtextarea'
 import { Dropdown } from 'primereact/dropdown'
 import { Checkbox } from 'primereact/checkbox'
-import { FormField } from '@/types'
+// import { FormField } from '@/types'
 
 interface Webhook {
 	id: string
@@ -329,7 +329,7 @@ export default function WebhookSupport({
 									try {
 										const headers = JSON.parse(e.target.value)
 										setNewWebhook(prev => ({ ...prev, headers }))
-									} catch (error) {
+									} catch {
 										// Invalid JSON, keep current value
 									}
 								}}

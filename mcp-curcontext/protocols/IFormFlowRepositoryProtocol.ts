@@ -5,7 +5,7 @@
  * capabilities for Cursor integration with the Form-Flow project.
  */
 
-import { MCPResult } from '../../src/lib/mcp/protocols/types'
+import { MCPResult } from '../types/CursorTypes'
 import {
 	ProjectStructure,
 	FileInfo,

@@ -16,7 +16,7 @@ export default function FormPreview({
 	visible,
 	onHide,
 }: FormPreviewProps) {
-	const [formData, setFormData] = useState<Record<string, any>>({})
+	const [formData, setFormData] = useState<Record<string, unknown>>({})
 	const [isSubmitting, setIsSubmitting] = useState(false)
 
 	useEffect(() => {
@@ -25,7 +25,7 @@ export default function FormPreview({
 		}
 	}, [visible])
 
-	const handleFieldChange = (fieldId: string, value: any) => {
+	const handleFieldChange = (fieldId: string, value: unknown) => {
 		setFormData(prev => ({
 			...prev,
 			[fieldId]: value,

@@ -13,10 +13,17 @@ import AdvancedFieldsPanel from './modules/advanced-fields/components/AdvancedFi
 import PowerFeaturesPanel from './modules/power-features/components/PowerFeaturesPanel'
 import { useFormHistory } from './shared/hooks/useFormHistory'
 import { useKeyboardShortcuts } from './shared/hooks/useKeyboardShortcuts'
-import { SmartSuggestionsPanel, QualityDashboard, ContextualHelpPanel } from './assistance'
+import {
+	SmartSuggestionsPanel,
+	QualityDashboard,
+	ContextualHelpPanel,
+} from './assistance'
 import { FieldSuggestion } from '@/lib/mcp/implementations/FieldMCP'
 import { FormImprovement } from '@/lib/mcp/implementations/FormMCP'
-import { HelpAction, UserContext } from '@/lib/mcp/implementations/FormAssistanceMCP'
+import {
+	HelpAction,
+	UserContext,
+} from '@/lib/mcp/implementations/FormAssistanceMCP'
 
 interface FormBuilderProps {
 	initialFields?: FormField[]
@@ -37,7 +44,7 @@ export default function FormBuilder({
 	const [useAdvancedLayout, setUseAdvancedLayout] = useState(false)
 	const [showAdvancedFields, setShowAdvancedFields] = useState(false)
 	const [showPowerFeatures, setShowPowerFeatures] = useState(false)
-	
+
 	// Assistance state
 	const [assistanceEnabled, setAssistanceEnabled] = useState(true)
 	const [currentUserContext, setCurrentUserContext] = useState<UserContext>({
@@ -165,66 +172,75 @@ export default function FormBuilder({
 	}, [fields, onFormSave])
 
 	// Assistance handlers
-	const handleSuggestionSelect = useCallback((suggestion: FieldSuggestion) => {
-		console.log('💡 Suggestion selected:', suggestion)
-		
-		if (suggestion.field) {
-			handleFieldAdd(suggestion.field)
-		}
-		
-		if (suggestion.validation) {
-			console.log('Applying validation suggestion:', suggestion.validation)
-			// Handle validation application
-		}
-		
-		if (suggestion.grouping) {
-			console.log('Applying grouping suggestion:', suggestion.grouping)
-			// Handle grouping application
-		}
-	}, [handleFieldAdd])
+	const handleSuggestionSelect = useCallback(
+		(suggestion: FieldSuggestion) => {
+			console.log('💡 Suggestion selected:', suggestion)
 
-	const handleImprovementSelect = useCallback((improvement: FormImprovement) => {
-		console.log('🔧 Improvement selected:', improvement)
-		// Handle improvement application based on type
-		switch (improvement.type) {
-			case 'usability':
-				console.log('Applying usability improvement:', improvement.action)
-				break
-			case 'accessibility':
-				console.log('Applying accessibility improvement:', improvement.action)
-				break
-			case 'performance':
-				console.log('Applying performance improvement:', improvement.action)
-				break
-			case 'security':
-				console.log('Applying security improvement:', improvement.action)
-				break
-		}
-	}, [])
+			if (suggestion.field) {
+				handleFieldAdd(suggestion.field)
+			}
 
-	const handleHelpAction = useCallback((action: HelpAction) => {
-		console.log('🆘 Help action triggered:', action)
-		
-		switch (action.type) {
-			case 'apply':
-				if (action.action === 'add-sample-field') {
-					const sampleField: FormField = {
-						id: `sample_${Date.now()}`,
-						type: 'text',
-						label: 'Sample Field',
-						required: false,
-						placeholder: 'This is a sample field',
+			if (suggestion.validation) {
+				console.log('Applying validation suggestion:', suggestion.validation)
+				// Handle validation application
+			}
+
+			if (suggestion.grouping) {
+				console.log('Applying grouping suggestion:', suggestion.grouping)
+				// Handle grouping application
+			}
+		},
+		[handleFieldAdd]
+	)
+
+	const handleImprovementSelect = useCallback(
+		(improvement: FormImprovement) => {
+			console.log('🔧 Improvement selected:', improvement)
+			// Handle improvement application based on type
+			switch (improvement.type) {
+				case 'usability':
+					console.log('Applying usability improvement:', improvement.action)
+					break
+				case 'accessibility':
+					console.log('Applying accessibility improvement:', improvement.action)
+					break
+				case 'performance':
+					console.log('Applying performance improvement:', improvement.action)
+					break
+				case 'security':
+					console.log('Applying security improvement:', improvement.action)
+					break
+			}
+		},
+		[]
+	)
+
+	const handleHelpAction = useCallback(
+		(action: HelpAction) => {
+			console.log('🆘 Help action triggered:', action)
+
+			switch (action.type) {
+				case 'apply':
+					if (action.action === 'add-sample-field') {
+						const sampleField: FormField = {
+							id: `sample_${Date.now()}`,
+							type: 'text',
+							label: 'Sample Field',
+							required: false,
+							placeholder: 'This is a sample field',
+						}
+						handleFieldAdd(sampleField)
 					}
-					handleFieldAdd(sampleField)
-				}
-				break
-			case 'navigate':
-				if (action.action === 'show-tutorial') {
-					setActiveTab(3) // Switch to assistance tab
-				}
-				break
-		}
-	}, [handleFieldAdd])
+					break
+				case 'navigate':
+					if (action.action === 'show-tutorial') {
+						setActiveTab(3) // Switch to assistance tab
+					}
+					break
+			}
+		},
+		[handleFieldAdd]
+	)
 
 	// Update user context when fields change
 	useEffect(() => {
@@ -617,7 +633,8 @@ export default function FormBuilder({
 												AI Assistant Disabled
 											</h4>
 											<p className='text-gray-400 mb-4'>
-												Enable AI assistance to get smart suggestions, quality insights, and contextual help.
+												Enable AI assistance to get smart suggestions, quality
+												insights, and contextual help.
 											</p>
 											<button
 												onClick={() => setAssistanceEnabled(true)}

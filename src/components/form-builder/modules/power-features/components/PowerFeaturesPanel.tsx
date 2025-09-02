@@ -9,12 +9,41 @@ import WebhookSupport from './WebhookSupport'
 import AnalyticsSystem from './AnalyticsSystem'
 import ExportOptions from './ExportOptions'
 
+interface APIConnection {
+	id: string
+	name: string
+	url: string
+	method: string
+	headers: Record<string, string>
+	enabled: boolean
+}
+
+interface Webhook {
+	id: string
+	name: string
+	url: string
+	events: string[]
+	enabled: boolean
+}
+
+interface AnalyticsConfig {
+	trackingEnabled: boolean
+	events: string[]
+	customMetrics: Record<string, unknown>
+}
+
+interface ExportConfig {
+	format: string
+	includeMetadata: boolean
+	filters: Record<string, unknown>
+}
+
 interface PowerFeaturesPanelProps {
 	fields: FormField[]
-	onAPIConnectionsChange: (connections: any[]) => void
-	onWebhooksChange: (webhooks: any[]) => void
-	onAnalyticsConfigChange: (config: any) => void
-	onExport: (config: any) => void
+	onAPIConnectionsChange: (connections: APIConnection[]) => void
+	onWebhooksChange: (webhooks: Webhook[]) => void
+	onAnalyticsConfigChange: (config: AnalyticsConfig) => void
+	onExport: (config: ExportConfig) => void
 	className?: string
 }
 
@@ -27,12 +56,12 @@ export default function PowerFeaturesPanel({
 	className = '',
 }: PowerFeaturesPanelProps) {
 	const [activeTab, setActiveTab] = useState(0)
-	const [apiConnections, setApiConnections] = useState<any[]>([])
-	const [webhooks, setWebhooks] = useState<any[]>([])
-	const [analyticsConfig, setAnalyticsConfig] = useState<any>({})
+	const [apiConnections, setApiConnections] = useState<APIConnection[]>([])
+	const [webhooks, setWebhooks] = useState<Webhook[]>([])
+	// const [analyticsConfig] = useState<AnalyticsConfig>({ trackingEnabled: false, events: [], customMetrics: {} })
 
 	const handleAPIConnectionsChange = useCallback(
-		(connections: any[]) => {
+		(connections: APIConnection[]) => {
 			setApiConnections(connections)
 			onAPIConnectionsChange(connections)
 		},
@@ -40,7 +69,7 @@ export default function PowerFeaturesPanel({
 	)
 
 	const handleWebhooksChange = useCallback(
-		(webhooks: any[]) => {
+		(webhooks: Webhook[]) => {
 			setWebhooks(webhooks)
 			onWebhooksChange(webhooks)
 		},
@@ -48,7 +77,7 @@ export default function PowerFeaturesPanel({
 	)
 
 	const handleAnalyticsConfigChange = useCallback(
-		(config: any) => {
+		(config: AnalyticsConfig) => {
 			setAnalyticsConfig(config)
 			onAnalyticsConfigChange(config)
 		},
@@ -56,7 +85,7 @@ export default function PowerFeaturesPanel({
 	)
 
 	const handleExport = useCallback(
-		(config: any) => {
+		(config: ExportConfig) => {
 			onExport(config)
 		},
 		[onExport]

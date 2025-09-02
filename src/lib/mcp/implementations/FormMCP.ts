@@ -31,7 +31,15 @@ export interface FormImprovement {
 }
 
 export interface FormPurpose {
-	type: 'contact' | 'registration' | 'survey' | 'application' | 'feedback' | 'lead-generation' | 'event' | 'other'
+	type:
+		| 'contact'
+		| 'registration'
+		| 'survey'
+		| 'application'
+		| 'feedback'
+		| 'lead-generation'
+		| 'event'
+		| 'other'
 	confidence: number
 	keywords: string[]
 	suggestedFields: FormField[]
@@ -574,11 +582,13 @@ export class FormMCP {
 	 * Suggests form improvements based on quality analysis
 	 */
 	static suggestFormImprovements(form: Form): MCPResult<FormImprovement[]> {
-		const tracker = MCPLogger.createPerformanceTracker('suggestFormImprovements')
+		const tracker = MCPLogger.createPerformanceTracker(
+			'suggestFormImprovements'
+		)
 
 		try {
 			console.log('💡 FormMCP: Generating improvement suggestions...')
-			
+
 			const improvements = FormMCP.generateImprovementSuggestions(form)
 
 			const result: MCPResult<FormImprovement[]> = {
@@ -624,7 +634,7 @@ export class FormMCP {
 
 		try {
 			console.log('🎯 FormMCP: Detecting form purpose...')
-			
+
 			const purpose = FormMCP.analyzeFormPurpose(form)
 
 			const result: MCPResult<FormPurpose> = {
@@ -665,13 +675,17 @@ export class FormMCP {
 	/**
 	 * Suggests fields based on detected purpose
 	 */
-	static suggestPurposeBasedFields(purpose: FormPurpose): MCPResult<FormField[]> {
-		const tracker = MCPLogger.createPerformanceTracker('suggestPurposeBasedFields')
+	static suggestPurposeBasedFields(
+		purpose: FormPurpose
+	): MCPResult<FormField[]> {
+		const tracker = MCPLogger.createPerformanceTracker(
+			'suggestPurposeBasedFields'
+		)
 
 		try {
 			console.log('📋 FormMCP: Suggesting purpose-based fields...')
 			console.log('🎯 Purpose type:', purpose.type)
-			
+
 			const suggestedFields = FormMCP.generatePurposeBasedFields(purpose)
 
 			const result: MCPResult<FormField[]> = {
@@ -717,7 +731,7 @@ export class FormMCP {
 
 		try {
 			console.log('📊 FormMCP: Predicting completion rate...')
-			
+
 			const prediction = FormMCP.calculateCompletionPrediction(form)
 
 			const result: MCPResult<CompletionPrediction> = {
@@ -763,7 +777,7 @@ export class FormMCP {
 
 		try {
 			console.log('⚠️ FormMCP: Identifying drop-off points...')
-			
+
 			const dropOffPoints = FormMCP.analyzeDropOffPoints(form)
 
 			const result: MCPResult<DropOffPoint[]> = {
@@ -806,13 +820,17 @@ export class FormMCP {
 	/**
 	 * Calculates quality score for different dimensions
 	 */
-	private static calculateQualityScore(form: Form): Omit<FormQualityAssessment, 'improvements'> {
+	private static calculateQualityScore(
+		form: Form
+	): Omit<FormQualityAssessment, 'improvements'> {
 		const usability = FormMCP.calculateUsabilityScore(form)
 		const accessibility = FormMCP.calculateAccessibilityScore(form)
 		const performance = FormMCP.calculatePerformanceScore(form)
 		const security = FormMCP.calculateSecurityScore(form)
-		
-		const overall = Math.round((usability + accessibility + performance + security) / 4)
+
+		const overall = Math.round(
+			(usability + accessibility + performance + security) / 4
+		)
 
 		return {
 			overall,
@@ -842,7 +860,9 @@ export class FormMCP {
 		score -= fieldsWithoutLabels.length * 5
 
 		// Check for placeholder text
-		const fieldsWithoutPlaceholders = form.fields.filter(f => !f.placeholder?.trim())
+		const fieldsWithoutPlaceholders = form.fields.filter(
+			f => !f.placeholder?.trim()
+		)
 		score -= Math.floor(fieldsWithoutPlaceholders.length * 2)
 
 		return Math.max(0, score)
@@ -859,11 +879,15 @@ export class FormMCP {
 		score -= fieldsWithoutLabels.length * 10
 
 		// Check for required field indicators
-		const requiredFieldsWithoutIndicators = form.fields.filter(f => f.required && !f.label?.includes('*'))
+		const requiredFieldsWithoutIndicators = form.fields.filter(
+			f => f.required && !f.label?.includes('*')
+		)
 		score -= requiredFieldsWithoutIndicators.length * 5
 
 		// Check for field types that might need special accessibility considerations
-		const complexFields = form.fields.filter(f => ['file', 'signature'].includes(f.type))
+		const complexFields = form.fields.filter(f =>
+			['file', 'signature'].includes(f.type)
+		)
 		score -= complexFields.length * 3
 
 		return Math.max(0, score)
@@ -884,7 +908,9 @@ export class FormMCP {
 		score -= fileFields.length * 5
 
 		// Check for complex field types
-		const complexFields = form.fields.filter(f => ['signature', 'textarea'].includes(f.type))
+		const complexFields = form.fields.filter(f =>
+			['signature', 'textarea'].includes(f.type)
+		)
 		score -= complexFields.length * 2
 
 		return Math.max(0, score)
@@ -923,7 +949,8 @@ export class FormMCP {
 				id: 'reduce-field-count',
 				type: 'usability',
 				title: 'Reduce Field Count',
-				description: 'Consider reducing the number of fields to improve completion rates',
+				description:
+					'Consider reducing the number of fields to improve completion rates',
 				impact: 'high',
 				effort: 'medium',
 				action: 'Remove non-essential fields or split into multiple steps',
@@ -937,7 +964,8 @@ export class FormMCP {
 				id: 'add-field-labels',
 				type: 'accessibility',
 				title: 'Add Field Labels',
-				description: 'All fields should have descriptive labels for accessibility',
+				description:
+					'All fields should have descriptive labels for accessibility',
 				impact: 'high',
 				effort: 'low',
 				action: 'Add clear, descriptive labels to all fields',
@@ -981,10 +1009,14 @@ export class FormMCP {
 	private static analyzeFormPurpose(form: Form): FormPurpose {
 		const text = `${form.title} ${form.description || ''}`.toLowerCase()
 		const fieldTypes = form.fields.map(f => f.type)
-		const fieldLabels = form.fields.map(f => f.label?.toLowerCase() || '')
+		// const fieldLabels = form.fields.map(f => f.label?.toLowerCase() || '')
 
 		// Contact form detection
-		if (text.includes('contact') || text.includes('reach') || text.includes('get in touch')) {
+		if (
+			text.includes('contact') ||
+			text.includes('reach') ||
+			text.includes('get in touch')
+		) {
 			return {
 				type: 'contact',
 				confidence: 0.9,
@@ -994,7 +1026,11 @@ export class FormMCP {
 		}
 
 		// Registration form detection
-		if (text.includes('register') || text.includes('sign up') || text.includes('join')) {
+		if (
+			text.includes('register') ||
+			text.includes('sign up') ||
+			text.includes('join')
+		) {
 			return {
 				type: 'registration',
 				confidence: 0.9,
@@ -1004,7 +1040,11 @@ export class FormMCP {
 		}
 
 		// Survey form detection
-		if (text.includes('survey') || text.includes('feedback') || text.includes('opinion')) {
+		if (
+			text.includes('survey') ||
+			text.includes('feedback') ||
+			text.includes('opinion')
+		) {
 			return {
 				type: 'survey',
 				confidence: 0.8,
@@ -1014,7 +1054,11 @@ export class FormMCP {
 		}
 
 		// Application form detection
-		if (text.includes('application') || text.includes('apply') || text.includes('candidate')) {
+		if (
+			text.includes('application') ||
+			text.includes('apply') ||
+			text.includes('candidate')
+		) {
 			return {
 				type: 'application',
 				confidence: 0.9,
@@ -1052,7 +1096,9 @@ export class FormMCP {
 	/**
 	 * Calculates completion prediction
 	 */
-	private static calculateCompletionPrediction(form: Form): CompletionPrediction {
+	private static calculateCompletionPrediction(
+		form: Form
+	): CompletionPrediction {
 		let baseRate = 0.8 // 80% base completion rate
 
 		// Adjust based on field count
@@ -1064,7 +1110,9 @@ export class FormMCP {
 		if (requiredFields.length > 5) baseRate -= 0.1
 
 		// Adjust based on complex fields
-		const complexFields = form.fields.filter(f => ['file', 'signature', 'textarea'].includes(f.type))
+		const complexFields = form.fields.filter(f =>
+			['file', 'signature', 'textarea'].includes(f.type)
+		)
 		baseRate -= complexFields.length * 0.05
 
 		const estimatedTime = form.fields.length * 30 // 30 seconds per field
@@ -1092,7 +1140,8 @@ export class FormMCP {
 					fieldLabel: field.label,
 					probability: 0.3,
 					reason: 'File uploads can be intimidating',
-					suggestion: 'Consider making file uploads optional or providing clear instructions',
+					suggestion:
+						'Consider making file uploads optional or providing clear instructions',
 				})
 			}
 
@@ -1113,7 +1162,8 @@ export class FormMCP {
 					fieldId: field.id,
 					fieldLabel: field.label,
 					probability: 0.15,
-					reason: 'Required fields without clear indication can cause confusion',
+					reason:
+						'Required fields without clear indication can cause confusion',
 					suggestion: 'Add asterisk (*) to required field labels',
 				})
 			}
@@ -1197,7 +1247,13 @@ export class FormMCP {
 				type: 'radio',
 				label: 'How satisfied are you?',
 				required: true,
-				options: ['Very Satisfied', 'Satisfied', 'Neutral', 'Dissatisfied', 'Very Dissatisfied'],
+				options: [
+					'Very Satisfied',
+					'Satisfied',
+					'Neutral',
+					'Dissatisfied',
+					'Very Dissatisfied',
+				],
 			},
 			{
 				id: generateId(),
@@ -1236,7 +1292,7 @@ export class FormMCP {
 				type: 'textarea',
 				label: 'Cover Letter',
 				required: false,
-				placeholder: 'Tell us why you\'re interested...',
+				placeholder: "Tell us why you're interested...",
 			},
 		]
 	}

@@ -2,9 +2,26 @@
 
 import React, { useState, useCallback } from 'react'
 import { Card } from 'primereact/card'
-import { Button } from 'primereact/button'
+// import { Button } from 'primereact/button'
 import { TabView, TabPanel } from 'primereact/tabview'
 import { FormField } from '@/types'
+
+interface FieldDependency {
+	id: string
+	sourceFieldId: string
+	targetFieldId: string
+	condition: string
+	value: string
+	action: string
+	actionValue: string
+	enabled: boolean
+}
+
+interface FormStep {
+	id: string
+	title: string
+	fields: FormField[]
+}
 import FileUploadField from './FileUploadField'
 import RichTextField from './RichTextField'
 import DateTimeField from './DateTimeField'
@@ -32,8 +49,8 @@ export default function AdvancedFieldsPanel({
 	className = '',
 }: AdvancedFieldsPanelProps) {
 	const [activeTab, setActiveTab] = useState(0)
-	const [dependencies, setDependencies] = useState<any[]>([])
-	const [steps, setSteps] = useState<any[]>([])
+	// const [dependencies, setDependencies] = useState<FieldDependency[]>([])
+	// const [steps, setSteps] = useState<FormStep[]>([])
 
 	const handleFieldUpdate = useCallback(
 		(field: FormField) => {
@@ -56,31 +73,31 @@ export default function AdvancedFieldsPanel({
 		[onFieldSelect]
 	)
 
-	const handleDependenciesChange = useCallback((newDependencies: any[]) => {
-		setDependencies(newDependencies)
+	const handleDependenciesChange = useCallback(() => {
+		// setDependencies(newDependencies)
 	}, [])
 
-	const handleStepsChange = useCallback((newSteps: any[]) => {
-		setSteps(newSteps)
+	const handleStepsChange = useCallback(() => {
+		// setSteps(newSteps)
 	}, [])
 
 	const handleFieldAdd = useCallback(
 		(field: FormField, stepId?: string) => {
 			if (stepId) {
 				// Add field to specific step
-				const newSteps = steps.map(step =>
-					step.id === stepId
-						? { ...step, fields: [...step.fields, field] }
-						: step
-				)
-				setSteps(newSteps)
+				// const newSteps = steps.map(step =>
+				// 	step.id === stepId
+				// 		? { ...step, fields: [...step.fields, field] }
+				// 		: step
+				// )
+				// setSteps(newSteps)
 			} else {
 				// Add field to main form
 				const newFields = [...fields, field]
 				onFieldsChange(newFields)
 			}
 		},
-		[fields, steps, onFieldsChange]
+		[fields, onFieldsChange]
 	)
 
 	const renderAdvancedField = (field: FormField) => {

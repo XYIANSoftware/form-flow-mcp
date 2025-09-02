@@ -34,7 +34,7 @@ export default function InputMaskField({
 	field,
 	onFieldUpdate,
 	onFieldRemove,
-	selectedFieldId,
+	// selectedFieldId,
 	className = '',
 }: InputMaskFieldProps) {
 	const [value, setValue] = useState(field.defaultValue || '')
@@ -64,7 +64,7 @@ export default function InputMaskField({
 	)
 
 	const handleValueChange = useCallback(
-		(e: any) => {
+		(e: { target: { value: string } }) => {
 			const newValue = e.target.value
 			setValue(newValue)
 			const updatedField = {

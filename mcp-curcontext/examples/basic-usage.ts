@@ -258,13 +258,4 @@ export async function runAllExamples() {
 	}
 }
 
-// Export individual functions for testing
-export {
-	analyzeProjectStructure,
-	findFilesByPattern,
-	analyzeCodebase,
-	findSimilarComponents,
-	getMCPArchitecture,
-	analyzeFile,
-	findSimilarComponentsWithAnalyzer,
-}
+// All functions are already exported individually above

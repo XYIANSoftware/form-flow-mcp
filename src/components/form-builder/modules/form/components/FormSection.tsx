@@ -27,11 +27,11 @@ export default function FormSection({
 	onFieldSelect,
 	onFieldRemove,
 	onFieldDuplicate,
-	onFieldMove,
+	// onFieldMove,
 	selectedFieldId,
-	showGrid = false,
-	snapToGrid = true,
-	gridSize = { rows: 12, cols: 12 },
+	// showGrid = false,
+	// snapToGrid = true,
+	// gridSize = { rows: 12, cols: 12 },
 }: FormSectionProps) {
 	const handleFieldClick = (field: FormField) => {
 		onFieldSelect(field)

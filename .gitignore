@@ -39,3 +39,29 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Cursor MCP System
+mcp-curcontext/node_modules/
+mcp-curcontext/dist/
+mcp-curcontext/coverage/
+mcp-curcontext/*.log
+mcp-curcontext/test-*.ts
+mcp-curcontext/working-example.ts
+mcp-curcontext/package-lock.json
+
+# Test files
+test-*.ts
+*-test.ts
+*.test.ts
+
+# Generated files
+*.d.ts
+*.d.ts.map
+*.js
+*.js.map
+*.mjs
+
+# Cursor MCP demo files
+mcp-curcontext/simple-demo.ts
+mcp-curcontext/simple-server.ts
+mcp-curcontext/server.ts

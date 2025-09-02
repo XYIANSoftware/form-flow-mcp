@@ -1,0 +1,11 @@
+{
+	"mcpServers": {
+		"form-flow-cursor-mcp": {
+			"command": "tsx",
+			"args": ["mcp-curcontext/simple-server.ts"],
+			"env": {
+				"NODE_ENV": "development"
+			}
+		}
+	}
+}

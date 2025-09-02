@@ -4,9 +4,9 @@ import React, { useState, useCallback } from 'react'
 import { Card } from 'primereact/card'
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
-import { InputTextarea } from 'primereact/inputtextarea'
+// import { InputTextarea } from 'primereact/inputtextarea'
 import { Checkbox } from 'primereact/checkbox'
-import { Dropdown } from 'primereact/dropdown'
+// import { Dropdown } from 'primereact/dropdown'
 import { FormField } from '@/types'
 
 interface FormStep {
@@ -36,7 +36,7 @@ export default function MultiStepForm({
 	onStepsChange,
 	onFieldSelect,
 	onFieldRemove,
-	onFieldAdd,
+	// onFieldAdd,
 	selectedFieldId,
 	className = '',
 }: MultiStepFormProps) {
@@ -104,15 +104,15 @@ export default function MultiStepForm({
 		[steps, onStepsChange]
 	)
 
-	const handleFieldAdd = useCallback(
-		(field: FormField, stepId: string) => {
-			const newSteps = steps.map(step =>
-				step.id === stepId ? { ...step, fields: [...step.fields, field] } : step
-			)
-			onStepsChange(newSteps)
-		},
-		[steps, onStepsChange]
-	)
+	// const handleFieldAdd = useCallback(
+	// 	(field: FormField, stepId: string) => {
+	// 		const newSteps = steps.map(step =>
+	// 			step.id === stepId ? { ...step, fields: [...step.fields, field] } : step
+	// 		)
+	// 		onStepsChange(newSteps)
+	// 	},
+	// 	[steps, onStepsChange]
+	// )
 
 	const handleFieldRemove = useCallback(
 		(fieldId: string) => {

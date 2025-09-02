@@ -37,7 +37,7 @@ export default function DateTimeField({
 	field,
 	onFieldUpdate,
 	onFieldRemove,
-	selectedFieldId,
+	// selectedFieldId,
 	className = '',
 }: DateTimeFieldProps) {
 	const [value, setValue] = useState<Date | Date[] | null>(null)
@@ -124,9 +124,9 @@ export default function DateTimeField({
 	]
 
 	const getCalendarProps = () => {
-		const props: any = {
+		const props: Record<string, unknown> = {
 			value: value,
-			onChange: (e: any) => handleValueChange(e.value),
+			onChange: (e: { value: Date | Date[] | null }) => handleValueChange(e.value),
 			placeholder: config.placeholder,
 			dateFormat: config.dateFormat,
 			showTime: config.showTime,

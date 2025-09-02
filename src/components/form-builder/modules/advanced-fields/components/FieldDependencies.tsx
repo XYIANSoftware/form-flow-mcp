@@ -356,8 +356,8 @@ export default function FieldDependencies({
 										/>
 										<span className='text-sm font-medium text-white'>
 											{getFieldLabel(dependency.sourceFieldId)}{' '}
-											{getConditionLabel(dependency.condition)} "
-											{dependency.value}"
+											{getConditionLabel(dependency.condition)} &quot;
+											{dependency.value}&quot;
 										</span>
 									</div>
 									<Button
@@ -371,7 +371,7 @@ export default function FieldDependencies({
 								<div className='text-xs text-gray-400 ml-6'>
 									→ {getActionLabel(dependency.action)}{' '}
 									{getFieldLabel(dependency.targetFieldId)}
-									{dependency.actionValue && ` to "${dependency.actionValue}"`}
+									{dependency.actionValue && ` to &quot;${dependency.actionValue}&quot;`}
 								</div>
 							</div>
 						))}

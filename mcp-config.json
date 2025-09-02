@@ -1,0 +1,11 @@
+{
+	"mcpServers": {
+		"form-flow-cursor-mcp": {
+			"command": "node",
+			"args": ["mcp-curcontext/dist/server.js"],
+			"env": {
+				"NODE_ENV": "development"
+			}
+		}
+	}
+}

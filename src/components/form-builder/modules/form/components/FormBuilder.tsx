@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { DragProvider } from '../../../shared/context/DragContext'
 import { FormDropZone } from './FormDropZone'
 import { FormSection } from './FormSection'
@@ -32,24 +32,24 @@ export default function FormBuilder({
 	onRemoveSection,
 	onMoveSection,
 }: FormBuilderProps) {
-	const [isDraggingOver, setIsDraggingOver] = useState(false)
+	const [isDraggingOver] = useState(false)
 	const [showPreview, setShowPreview] = useState(false)
 
 	const {
 		sections: historySections,
-		pushState,
+		// pushState,
 		undo,
 		redo,
 		canUndo,
 		canRedo,
 	} = useFormHistory(sections)
 
-	const handleChange = useCallback(
-		(newSections: FormSectionType[]) => {
-			pushState(newSections)
-		},
-		[pushState]
-	)
+	// const handleChange = useCallback(
+	// 	(newSections: FormSectionType[]) => {
+	// 		pushState(newSections)
+	// 	},
+	// 	[pushState]
+	// )
 
 	useKeyboardShortcuts([
 		{ key: 'z', ctrl: true, handler: undo },

@@ -1,0 +1,87 @@
+# Cursor Rules for Form-Flow Project
+
+## Project Context
+
+This is a Form-Flow MCP project - a Next.js 15.3.4 application with advanced form building capabilities using Model Context Protocol (MCP) architecture.
+
+## Key Technologies
+
+- Next.js 15.3.4 with App Router
+- React 18+ with TypeScript
+- PrimeReact 10.9.6 for UI components
+- Tailwind CSS 4 + PrimeFlex for styling
+- Model Context Protocol (MCP) for business logic separation
+
+## Project Structure
+
+- `src/app/` - Next.js app router pages
+- `src/components/` - React components
+- `src/lib/mcp/` - MCP implementations and protocols
+- `src/types/` - TypeScript type definitions
+- `mcp-curcontext/` - Cursor MCP system for intelligent assistance
+
+## MCP Architecture
+
+The project uses MCPs for:
+
+- FormMCP - Form business logic
+- FieldMCP - Field rendering and validation
+- ComponentLibraryMCP - Reusable form components
+- LayoutSystemMCP - Form layout management
+- TemplateLibraryMCP - Pre-built form templates
+- FormAssistanceMCP - AI-powered form assistance
+
+## Form Builder Features
+
+- Drag-and-drop form building
+- Real-time form preview
+- Undo/redo functionality
+- Keyboard shortcuts
+- Component palette with 25+ field types
+- Layout system with 12+ templates
+- CSV import/export capabilities
+
+## Development Guidelines
+
+- Use TypeScript for all new code
+- Follow MCP patterns for business logic
+- Use PrimeReact components for UI
+- Implement proper error handling with MCPError objects
+- Add comprehensive logging with MCPLogger
+- Write tests for new MCP implementations
+- Update documentation for new features
+
+## Cursor MCP Integration
+
+The project includes a Cursor MCP system that provides:
+
+- Repository intelligence and navigation
+- Component discovery and analysis
+- Code generation following project patterns
+- Debugging and performance assistance
+- Documentation generation
+
+## Code Style
+
+- Use functional components with hooks
+- Prefer composition over inheritance
+- Use proper TypeScript types
+- Follow React best practices
+- Implement proper error boundaries
+- Use consistent naming conventions
+
+## Testing
+
+- Write unit tests for MCPs
+- Test component interactions
+- Validate form functionality
+- Test CSV import/export
+- Verify drag-and-drop behavior
+
+## Performance
+
+- Use React.memo for expensive components
+- Implement proper loading states
+- Optimize bundle size
+- Monitor MCP execution times
+- Use lazy loading where appropriate

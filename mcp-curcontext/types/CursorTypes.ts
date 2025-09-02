@@ -197,17 +197,38 @@ export interface DataEdge {
 	frequency: number
 }
 
-// Re-export existing types from the main project
-export type {
-	FormComponent,
-	FormLayout,
-	FormTemplate,
-	ComponentCategory,
-	LayoutType,
-	TemplateCategory,
-	FormField,
-	FieldType,
-	ValidationRule,
-	MCPResult,
-	MCPError,
-} from '../../src/types'
+// Define basic types locally for now
+export interface MCPResult<T> {
+	success: boolean
+	data?: T
+	errors?: MCPError[]
+	executionTime: number
+}
+
+export interface MCPError {
+	code: string
+	message: string
+	details?: any
+}
+
+export interface FormComponent {
+	name: string
+	type: string
+	category: string
+	props: any[]
+	location: string
+}
+
+export interface FormLayout {
+	name: string
+	type: string
+	sections: any[]
+	location: string
+}
+
+export interface FormTemplate {
+	name: string
+	category: string
+	fields: any[]
+	location: string
+}

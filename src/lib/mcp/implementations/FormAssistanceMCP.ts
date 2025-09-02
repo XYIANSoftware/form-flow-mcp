@@ -79,7 +79,11 @@ export interface PerformanceAnalysis {
 
 export interface PerformanceSuggestion {
 	id: string
-	type: 'lazy-loading' | 'field-optimization' | 'validation-optimization' | 'bundle-optimization'
+	type:
+		| 'lazy-loading'
+		| 'field-optimization'
+		| 'validation-optimization'
+		| 'bundle-optimization'
 	title: string
 	description: string
 	impact: 'low' | 'medium' | 'high'
@@ -149,15 +153,20 @@ export class FormAssistanceMCP {
 	/**
 	 * Suggests form optimizations based on current form state
 	 */
-	static suggestFormOptimizations(form: Form): MCPResult<OptimizationSuggestion[]> {
-		const tracker = MCPLogger.createPerformanceTracker('suggestFormOptimizations')
+	static suggestFormOptimizations(
+		form: Form
+	): MCPResult<OptimizationSuggestion[]> {
+		const tracker = MCPLogger.createPerformanceTracker(
+			'suggestFormOptimizations'
+		)
 
 		try {
 			console.log('💡 FormAssistanceMCP: Suggesting form optimizations...')
 			console.log('📝 Form ID:', form.id)
 			console.log('📊 Field count:', form.fields.length)
 
-			const suggestions = FormAssistanceMCP.generateOptimizationSuggestions(form)
+			const suggestions =
+				FormAssistanceMCP.generateOptimizationSuggestions(form)
 
 			const result: MCPResult<OptimizationSuggestion[]> = {
 				success: true,
@@ -197,7 +206,9 @@ export class FormAssistanceMCP {
 	/**
 	 * Finds matching templates based on requirements
 	 */
-	static findMatchingTemplates(requirements: FormRequirements): MCPResult<TemplateMatch[]> {
+	static findMatchingTemplates(
+		requirements: FormRequirements
+	): MCPResult<TemplateMatch[]> {
 		const tracker = MCPLogger.createPerformanceTracker('findMatchingTemplates')
 
 		try {
@@ -245,7 +256,9 @@ export class FormAssistanceMCP {
 	/**
 	 * Generates a custom template based on requirements
 	 */
-	static generateCustomTemplate(requirements: FormRequirements): MCPResult<Template> {
+	static generateCustomTemplate(
+		requirements: FormRequirements
+	): MCPResult<Template> {
 		const tracker = MCPLogger.createPerformanceTracker('generateCustomTemplate')
 
 		try {
@@ -339,11 +352,17 @@ export class FormAssistanceMCP {
 	/**
 	 * Suggests performance improvements for a form
 	 */
-	static suggestPerformanceImprovements(form: Form): MCPResult<PerformanceSuggestion[]> {
-		const tracker = MCPLogger.createPerformanceTracker('suggestPerformanceImprovements')
+	static suggestPerformanceImprovements(
+		form: Form
+	): MCPResult<PerformanceSuggestion[]> {
+		const tracker = MCPLogger.createPerformanceTracker(
+			'suggestPerformanceImprovements'
+		)
 
 		try {
-			console.log('⚡ FormAssistanceMCP: Suggesting performance improvements...')
+			console.log(
+				'⚡ FormAssistanceMCP: Suggesting performance improvements...'
+			)
 			console.log('📝 Form ID:', form.id)
 
 			const suggestions = FormAssistanceMCP.generatePerformanceSuggestions(form)
@@ -466,7 +485,11 @@ export class FormAssistanceMCP {
 						action: 'auto-organize',
 					},
 				],
-				relatedTopics: ['Field Grouping', 'Responsive Design', 'User Experience'],
+				relatedTopics: [
+					'Field Grouping',
+					'Responsive Design',
+					'User Experience',
+				],
 			}
 		}
 
@@ -474,7 +497,8 @@ export class FormAssistanceMCP {
 		return {
 			id: generateId(),
 			title: 'Getting Started with Form Builder',
-			description: 'Welcome to the Form Builder! Here are some tips to get you started',
+			description:
+				'Welcome to the Form Builder! Here are some tips to get you started',
 			steps: [
 				'Start by giving your form a clear title and description',
 				'Add fields by dragging them from the field palette',
@@ -503,7 +527,9 @@ export class FormAssistanceMCP {
 	/**
 	 * Generates optimization suggestions for a form
 	 */
-	private static generateOptimizationSuggestions(form: Form): OptimizationSuggestion[] {
+	private static generateOptimizationSuggestions(
+		form: Form
+	): OptimizationSuggestion[] {
 		const suggestions: OptimizationSuggestion[] = []
 
 		// Performance optimizations
@@ -512,7 +538,8 @@ export class FormAssistanceMCP {
 				id: generateId(),
 				type: 'performance',
 				title: 'Consider Multi-Step Form',
-				description: 'Forms with many fields can benefit from being split into multiple steps',
+				description:
+					'Forms with many fields can benefit from being split into multiple steps',
 				impact: 'high',
 				effort: 'medium',
 				action: 'Split form into logical steps',
@@ -527,7 +554,8 @@ export class FormAssistanceMCP {
 				id: generateId(),
 				type: 'usability',
 				title: 'Reduce Required Fields',
-				description: 'Too many required fields can reduce form completion rates',
+				description:
+					'Too many required fields can reduce form completion rates',
 				impact: 'high',
 				effort: 'low',
 				action: 'Make some fields optional',
@@ -542,7 +570,8 @@ export class FormAssistanceMCP {
 				id: generateId(),
 				type: 'accessibility',
 				title: 'Add Field Labels',
-				description: 'All fields should have descriptive labels for accessibility',
+				description:
+					'All fields should have descriptive labels for accessibility',
 				impact: 'high',
 				effort: 'low',
 				action: 'Add clear labels to all fields',
@@ -557,7 +586,8 @@ export class FormAssistanceMCP {
 				id: generateId(),
 				type: 'security',
 				title: 'Add File Upload Restrictions',
-				description: 'File upload fields should have size and type restrictions',
+				description:
+					'File upload fields should have size and type restrictions',
 				impact: 'medium',
 				effort: 'low',
 				action: 'Add file size and type restrictions',
@@ -571,7 +601,9 @@ export class FormAssistanceMCP {
 	/**
 	 * Matches templates based on requirements
 	 */
-	private static matchTemplates(requirements: FormRequirements): TemplateMatch[] {
+	private static matchTemplates(
+		requirements: FormRequirements
+	): TemplateMatch[] {
 		const templates = FormAssistanceMCP.getAvailableTemplates()
 		const matches: TemplateMatch[] = []
 
@@ -579,22 +611,41 @@ export class FormAssistanceMCP {
 			let similarity = 0
 
 			// Check purpose match
-			if (template.category.toLowerCase().includes(requirements.purpose.toLowerCase())) {
+			if (
+				template.category
+					.toLowerCase()
+					.includes(requirements.purpose.toLowerCase())
+			) {
 				similarity += 0.4
 			}
 
 			// Check industry match
-			if (requirements.industry && template.industry === requirements.industry) {
+			if (
+				requirements.industry &&
+				template.industry === requirements.industry
+			) {
 				similarity += 0.3
 			}
 
 			// Check field count match
-			const fieldCountMatch = Math.max(0, 1 - Math.abs(template.fields.length - (requirements.fields?.length || 0)) / 10)
+			const fieldCountMatch = Math.max(
+				0,
+				1 -
+					Math.abs(
+						template.fields.length - (requirements.fields?.length || 0)
+					) /
+						10
+			)
 			similarity += fieldCountMatch * 0.2
 
 			// Check complexity match
 			const complexity = requirements.complexity || 'intermediate'
-			const templateComplexity = template.fields.length > 10 ? 'advanced' : template.fields.length > 5 ? 'intermediate' : 'simple'
+			const templateComplexity =
+				template.fields.length > 10
+					? 'advanced'
+					: template.fields.length > 5
+					? 'intermediate'
+					: 'simple'
 			if (complexity === templateComplexity) {
 				similarity += 0.1
 			}
@@ -618,17 +669,30 @@ export class FormAssistanceMCP {
 	/**
 	 * Creates a custom template based on requirements
 	 */
-	private static createCustomTemplate(requirements: FormRequirements): Template {
-		const fields = FormAssistanceMCP.generateFieldsForPurpose(requirements.purpose, requirements.industry)
-		
+	private static createCustomTemplate(
+		requirements: FormRequirements
+	): Template {
+		const fields = FormAssistanceMCP.generateFieldsForPurpose(
+			requirements.purpose,
+			requirements.industry
+		)
+
 		return {
 			id: generateId(),
-			name: `${requirements.purpose.charAt(0).toUpperCase() + requirements.purpose.slice(1)} Form Template`,
-			description: `A custom ${requirements.purpose} form template${requirements.industry ? ` for ${requirements.industry}` : ''}`,
+			name: `${
+				requirements.purpose.charAt(0).toUpperCase() +
+				requirements.purpose.slice(1)
+			} Form Template`,
+			description: `A custom ${requirements.purpose} form template${
+				requirements.industry ? ` for ${requirements.industry}` : ''
+			}`,
 			category: requirements.purpose,
 			industry: requirements.industry,
 			fields,
-			tags: [requirements.purpose, ...(requirements.industry ? [requirements.industry] : [])],
+			tags: [
+				requirements.purpose,
+				...(requirements.industry ? [requirements.industry] : []),
+			],
 		}
 	}
 
@@ -640,7 +704,8 @@ export class FormAssistanceMCP {
 		const complexityScore = FormAssistanceMCP.calculateComplexityScore(form)
 		const loadTime = FormAssistanceMCP.estimateLoadTime(form)
 		const performanceScore = FormAssistanceMCP.calculatePerformanceScore(form)
-		const optimizationSuggestions = FormAssistanceMCP.generatePerformanceSuggestions(form)
+		const optimizationSuggestions =
+			FormAssistanceMCP.generatePerformanceSuggestions(form)
 
 		return {
 			loadTime,
@@ -654,7 +719,9 @@ export class FormAssistanceMCP {
 	/**
 	 * Generates performance improvement suggestions
 	 */
-	private static generatePerformanceSuggestions(form: Form): PerformanceSuggestion[] {
+	private static generatePerformanceSuggestions(
+		form: Form
+	): PerformanceSuggestion[] {
 		const suggestions: PerformanceSuggestion[] = []
 
 		// Lazy loading suggestion
@@ -663,7 +730,8 @@ export class FormAssistanceMCP {
 				id: generateId(),
 				type: 'lazy-loading',
 				title: 'Implement Lazy Loading',
-				description: 'Load fields as they become visible to improve initial load time',
+				description:
+					'Load fields as they become visible to improve initial load time',
 				impact: 'high',
 				effort: 'medium',
 				estimatedImprovement: '40-60% faster initial load',
@@ -672,13 +740,16 @@ export class FormAssistanceMCP {
 		}
 
 		// Field optimization
-		const complexFields = form.fields.filter(f => ['file', 'signature', 'rich-text'].includes(f.type))
+		const complexFields = form.fields.filter(f =>
+			['file', 'signature', 'rich-text'].includes(f.type)
+		)
 		if (complexFields.length > 2) {
 			suggestions.push({
 				id: generateId(),
 				type: 'field-optimization',
 				title: 'Optimize Complex Fields',
-				description: 'Complex fields like file uploads and rich text can impact performance',
+				description:
+					'Complex fields like file uploads and rich text can impact performance',
 				impact: 'medium',
 				effort: 'low',
 				estimatedImprovement: '20-30% performance improvement',
@@ -795,7 +866,8 @@ export class FormAssistanceMCP {
 			{
 				id: 'contact-template',
 				name: 'Contact Form',
-				description: 'A simple contact form with name, email, and message fields',
+				description:
+					'A simple contact form with name, email, and message fields',
 				category: 'contact',
 				fields: [
 					{
@@ -870,7 +942,13 @@ export class FormAssistanceMCP {
 						type: 'radio',
 						label: 'How satisfied are you?',
 						required: true,
-						options: ['Very Satisfied', 'Satisfied', 'Neutral', 'Dissatisfied', 'Very Dissatisfied'],
+						options: [
+							'Very Satisfied',
+							'Satisfied',
+							'Neutral',
+							'Dissatisfied',
+							'Very Dissatisfied',
+						],
 					},
 					{
 						id: generateId(),
@@ -888,7 +966,10 @@ export class FormAssistanceMCP {
 	/**
 	 * Generates fields for a specific purpose
 	 */
-	private static generateFieldsForPurpose(purpose: string, industry?: string): FormField[] {
+	private static generateFieldsForPurpose(
+		purpose: string,
+		_industry?: string
+	): FormField[] {
 		const baseFields: FormField[] = []
 
 		switch (purpose.toLowerCase()) {
@@ -951,7 +1032,13 @@ export class FormAssistanceMCP {
 						type: 'radio',
 						label: 'How satisfied are you?',
 						required: true,
-						options: ['Very Satisfied', 'Satisfied', 'Neutral', 'Dissatisfied', 'Very Dissatisfied'],
+						options: [
+							'Very Satisfied',
+							'Satisfied',
+							'Neutral',
+							'Dissatisfied',
+							'Very Dissatisfied',
+						],
 					},
 					{
 						id: generateId(),
