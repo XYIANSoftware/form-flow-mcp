@@ -126,7 +126,8 @@ export default function DateTimeField({
 	const getCalendarProps = () => {
 		const props: Record<string, unknown> = {
 			value: value,
-			onChange: (e: { value: Date | Date[] | null }) => handleValueChange(e.value),
+			onChange: (e: { value: Date | Date[] | null }) =>
+				handleValueChange(e.value),
 			placeholder: config.placeholder,
 			dateFormat: config.dateFormat,
 			showTime: config.showTime,

@@ -17,6 +17,8 @@ import {
 	SmartSuggestionsPanel,
 	QualityDashboard,
 	ContextualHelpPanel,
+	TemplateIntelligencePanel,
+	SmartValidationPanel,
 } from './assistance'
 import { FieldSuggestion } from '@/lib/mcp/implementations/FieldMCP'
 import { FormImprovement } from '@/lib/mcp/implementations/FormMCP'
@@ -618,10 +620,44 @@ export default function FormBuilder({
 											</div>
 
 											{/* Contextual Help */}
-											<div className='col-12'>
+											<div className='col-12 mb-4'>
 												<ContextualHelpPanel
 													userContext={currentUserContext}
 													onHelpAction={handleHelpAction}
+													className='h-full'
+												/>
+											</div>
+
+											{/* Template Intelligence */}
+											<div className='col-12 lg:col-6 mb-4'>
+												<TemplateIntelligencePanel
+													fields={fields}
+													selectedField={selectedField}
+													onTemplateSelect={template => {
+														console.log('Template selected:', template)
+														// TODO: Implement template application
+													}}
+													onSuggestionApply={suggestion => {
+														console.log('Suggestion applied:', suggestion)
+														// TODO: Implement suggestion application
+													}}
+													className='h-full'
+												/>
+											</div>
+
+											{/* Smart Validation */}
+											<div className='col-12 lg:col-6 mb-4'>
+												<SmartValidationPanel
+													fields={fields}
+													selectedField={selectedField}
+													onValidationRuleAdd={rule => {
+														console.log('Validation rule added:', rule)
+														// TODO: Implement validation rule addition
+													}}
+													onValidationRuleUpdate={rule => {
+														console.log('Validation rule updated:', rule)
+														// TODO: Implement validation rule update
+													}}
 													className='h-full'
 												/>
 											</div>

@@ -8,3 +8,5 @@
 export { default as SmartSuggestionsPanel } from './SmartSuggestionsPanel'
 export { default as QualityDashboard } from './QualityDashboard'
 export { default as ContextualHelpPanel } from './ContextualHelpPanel'
+export { default as TemplateIntelligencePanel } from './TemplateIntelligencePanel'
+export { default as SmartValidationPanel } from './SmartValidationPanel'

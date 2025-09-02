@@ -371,7 +371,8 @@ export default function FieldDependencies({
 								<div className='text-xs text-gray-400 ml-6'>
 									→ {getActionLabel(dependency.action)}{' '}
 									{getFieldLabel(dependency.targetFieldId)}
-									{dependency.actionValue && ` to &quot;${dependency.actionValue}&quot;`}
+									{dependency.actionValue &&
+										` to &quot;${dependency.actionValue}&quot;`}
 								</div>
 							</div>
 						))}

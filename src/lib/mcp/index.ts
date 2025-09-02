@@ -24,6 +24,8 @@ export { FormGeneratorMCP } from './implementations/FormGeneratorMCP'
 
 // Assistance MCPs
 export { FormAssistanceMCP } from './implementations/FormAssistanceMCP'
+export { TemplateIntelligenceMCP } from './implementations/TemplateIntelligenceMCP'
+export { SmartValidationMCP } from './implementations/SmartValidationMCP'
 
 export { MCPLogger } from './implementations/logger'
 
