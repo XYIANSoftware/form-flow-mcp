@@ -13,6 +13,10 @@ import AdvancedFieldsPanel from './modules/advanced-fields/components/AdvancedFi
 import PowerFeaturesPanel from './modules/power-features/components/PowerFeaturesPanel'
 import { useFormHistory } from './shared/hooks/useFormHistory'
 import { useKeyboardShortcuts } from './shared/hooks/useKeyboardShortcuts'
+import { SmartSuggestionsPanel, QualityDashboard, ContextualHelpPanel } from './assistance'
+import { FieldSuggestion } from '@/lib/mcp/implementations/FieldMCP'
+import { FormImprovement } from '@/lib/mcp/implementations/FormMCP'
+import { HelpAction, UserContext } from '@/lib/mcp/implementations/FormAssistanceMCP'
 
 interface FormBuilderProps {
 	initialFields?: FormField[]
@@ -33,6 +37,23 @@ export default function FormBuilder({
 	const [useAdvancedLayout, setUseAdvancedLayout] = useState(false)
 	const [showAdvancedFields, setShowAdvancedFields] = useState(false)
 	const [showPowerFeatures, setShowPowerFeatures] = useState(false)
+	
+	// Assistance state
+	const [assistanceEnabled, setAssistanceEnabled] = useState(true)
+	const [currentUserContext, setCurrentUserContext] = useState<UserContext>({
+		userId: 'current-user',
+		currentAction: 'form-building',
+		currentForm: {
+			id: 'temp-form',
+			userId: 'current-user',
+			title: 'Current Form',
+			description: '',
+			fields: fields,
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		},
+		experienceLevel: 'intermediate',
+	})
 
 	// Form history management
 	const { canUndo, canRedo, undo, redo, saveState } = useFormHistory(
@@ -142,6 +163,88 @@ export default function FormBuilder({
 		onFormSave?.(fields)
 		console.log('💾 Form saved:', { fieldCount: fields.length })
 	}, [fields, onFormSave])
+
+	// Assistance handlers
+	const handleSuggestionSelect = useCallback((suggestion: FieldSuggestion) => {
+		console.log('💡 Suggestion selected:', suggestion)
+		
+		if (suggestion.field) {
+			handleFieldAdd(suggestion.field)
+		}
+		
+		if (suggestion.validation) {
+			console.log('Applying validation suggestion:', suggestion.validation)
+			// Handle validation application
+		}
+		
+		if (suggestion.grouping) {
+			console.log('Applying grouping suggestion:', suggestion.grouping)
+			// Handle grouping application
+		}
+	}, [handleFieldAdd])
+
+	const handleImprovementSelect = useCallback((improvement: FormImprovement) => {
+		console.log('🔧 Improvement selected:', improvement)
+		// Handle improvement application based on type
+		switch (improvement.type) {
+			case 'usability':
+				console.log('Applying usability improvement:', improvement.action)
+				break
+			case 'accessibility':
+				console.log('Applying accessibility improvement:', improvement.action)
+				break
+			case 'performance':
+				console.log('Applying performance improvement:', improvement.action)
+				break
+			case 'security':
+				console.log('Applying security improvement:', improvement.action)
+				break
+		}
+	}, [])
+
+	const handleHelpAction = useCallback((action: HelpAction) => {
+		console.log('🆘 Help action triggered:', action)
+		
+		switch (action.type) {
+			case 'apply':
+				if (action.action === 'add-sample-field') {
+					const sampleField: FormField = {
+						id: `sample_${Date.now()}`,
+						type: 'text',
+						label: 'Sample Field',
+						required: false,
+						placeholder: 'This is a sample field',
+					}
+					handleFieldAdd(sampleField)
+				}
+				break
+			case 'navigate':
+				if (action.action === 'show-tutorial') {
+					setActiveTab(3) // Switch to assistance tab
+				}
+				break
+		}
+	}, [handleFieldAdd])
+
+	// Update user context when fields change
+	useEffect(() => {
+		setCurrentUserContext(prev => ({
+			...prev,
+			currentForm: {
+				...prev.currentForm!,
+				fields: fields,
+			},
+		}))
+	}, [fields])
+
+	// Update user context when field is selected
+	useEffect(() => {
+		setCurrentUserContext(prev => ({
+			...prev,
+			currentField: selectedField,
+			currentAction: selectedField ? 'field-editing' : 'form-building',
+		}))
+	}, [selectedField])
 
 	return (
 		<div className={`form-builder h-full ${className}`}>
@@ -439,6 +542,91 @@ export default function FormBuilder({
 											</button>
 										</div>
 									</div>
+								</div>
+							</TabPanel>
+
+							<TabPanel header='AI Assistant' leftIcon='pi pi-sparkles'>
+								<div className='p-4'>
+									<div className='flex items-center justify-between mb-4'>
+										<h3 className='text-lg font-semibold text-white m-0'>
+											AI Form Assistant
+										</h3>
+										<div className='flex items-center gap-2'>
+											<span className='text-sm text-gray-400'>Assistance:</span>
+											<button
+												onClick={() => setAssistanceEnabled(!assistanceEnabled)}
+												className={`
+													px-3 py-1 rounded text-sm transition-colors
+													${
+														assistanceEnabled
+															? 'bg-green-600 hover:bg-green-700 text-white'
+															: 'bg-gray-600 hover:bg-gray-500 text-gray-300'
+													}
+												`}
+											>
+												{assistanceEnabled ? 'Enabled' : 'Disabled'}
+											</button>
+										</div>
+									</div>
+
+									{assistanceEnabled ? (
+										<div className='grid'>
+											{/* Smart Suggestions */}
+											<div className='col-12 lg:col-6 mb-4'>
+												<SmartSuggestionsPanel
+													suggestions={[]}
+													onSuggestionSelect={handleSuggestionSelect}
+													context={{
+														fields: fields,
+														purpose: 'form-building',
+													}}
+													className='h-full'
+												/>
+											</div>
+
+											{/* Quality Dashboard */}
+											<div className='col-12 lg:col-6 mb-4'>
+												<QualityDashboard
+													form={{
+														id: 'current-form',
+														userId: 'current-user',
+														title: 'Current Form',
+														description: '',
+														fields: fields,
+														createdAt: new Date(),
+														updatedAt: new Date(),
+													}}
+													onImprovementSelect={handleImprovementSelect}
+													className='h-full'
+												/>
+											</div>
+
+											{/* Contextual Help */}
+											<div className='col-12'>
+												<ContextualHelpPanel
+													userContext={currentUserContext}
+													onHelpAction={handleHelpAction}
+													className='h-full'
+												/>
+											</div>
+										</div>
+									) : (
+										<div className='text-center p-8'>
+											<i className='pi pi-sparkles text-4xl text-gray-500 mb-4' />
+											<h4 className='text-lg font-medium text-white mb-2'>
+												AI Assistant Disabled
+											</h4>
+											<p className='text-gray-400 mb-4'>
+												Enable AI assistance to get smart suggestions, quality insights, and contextual help.
+											</p>
+											<button
+												onClick={() => setAssistanceEnabled(true)}
+												className='px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors'
+											>
+												Enable AI Assistant
+											</button>
+										</div>
+									)}
 								</div>
 							</TabPanel>
 						</TabView>

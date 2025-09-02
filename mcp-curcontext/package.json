@@ -1,0 +1,63 @@
+{
+	"name": "form-flow-cursor-mcp",
+	"version": "1.0.0",
+	"description": "Cursor MCP System for Form-Flow Repository - Intelligent development assistance",
+	"main": "index.ts",
+	"type": "module",
+	"scripts": {
+		"build": "tsc",
+		"dev": "tsc --watch",
+		"test": "jest",
+		"lint": "eslint . --ext .ts,.tsx",
+		"lint:fix": "eslint . --ext .ts,.tsx --fix",
+		"examples": "tsx examples/basic-usage.ts",
+		"analyze": "tsx examples/basic-usage.ts"
+	},
+	"keywords": [
+		"mcp",
+		"cursor",
+		"form-flow",
+		"development",
+		"assistance",
+		"code-generation",
+		"debugging",
+		"documentation"
+	],
+	"author": "Form-Flow Team",
+	"license": "MIT",
+	"dependencies": {
+		"typescript": "^5.0.0"
+	},
+	"devDependencies": {
+		"@types/node": "^20.0.0",
+		"@typescript-eslint/eslint-plugin": "^6.0.0",
+		"@typescript-eslint/parser": "^6.0.0",
+		"eslint": "^8.0.0",
+		"jest": "^29.0.0",
+		"tsx": "^4.0.0"
+	},
+	"peerDependencies": {
+		"form-flow-mcp": "workspace:*"
+	},
+	"files": [
+		"dist/",
+		"src/",
+		"types/",
+		"utils/",
+		"examples/",
+		"README.md"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/your-org/form-flow-mcp.git",
+		"directory": "mcp-curcontext"
+	},
+	"bugs": {
+		"url": "https://github.com/your-org/form-flow-mcp/issues"
+	},
+	"homepage": "https://github.com/your-org/form-flow-mcp#readme",
+	"engines": {
+		"node": ">=18.0.0",
+		"npm": ">=8.0.0"
+	}
+}

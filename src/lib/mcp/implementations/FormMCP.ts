@@ -10,6 +10,48 @@ import { MCPLogger } from './logger'
 import { Form, CreateFormData, FormField, FieldType } from '@/types'
 import { generateId } from '@/utils'
 
+// New types for assistance features
+export interface FormQualityAssessment {
+	overall: number
+	usability: number
+	accessibility: number
+	performance: number
+	security: number
+	improvements: FormImprovement[]
+}
+
+export interface FormImprovement {
+	id: string
+	type: 'usability' | 'accessibility' | 'performance' | 'security'
+	title: string
+	description: string
+	impact: 'low' | 'medium' | 'high'
+	effort: 'low' | 'medium' | 'high'
+	action?: string
+}
+
+export interface FormPurpose {
+	type: 'contact' | 'registration' | 'survey' | 'application' | 'feedback' | 'lead-generation' | 'event' | 'other'
+	confidence: number
+	keywords: string[]
+	suggestedFields: FormField[]
+}
+
+export interface CompletionPrediction {
+	rate: number
+	estimatedTime: number
+	dropOffPoints: DropOffPoint[]
+	confidence: number
+}
+
+export interface DropOffPoint {
+	fieldId: string
+	fieldLabel: string
+	probability: number
+	reason: string
+	suggestion: string
+}
+
 export class FormMCP {
 	/**
 	 * Creates a new form with validation and business logic
@@ -472,5 +514,763 @@ export class FormMCP {
 				field.options?.map(opt => opt.trim()).filter(opt => opt.length > 0) ||
 				undefined,
 		}
+	}
+
+	// ===== ASSISTANCE METHODS =====
+
+	/**
+	 * Analyzes form quality and provides assessment
+	 */
+	static analyzeFormQuality(form: Form): MCPResult<FormQualityAssessment> {
+		const tracker = MCPLogger.createPerformanceTracker('analyzeFormQuality')
+
+		try {
+			console.log('🔍 FormMCP: Analyzing form quality...')
+			console.log('📝 Form ID:', form.id)
+			console.log('📊 Field count:', form.fields.length)
+
+			const assessment = FormMCP.calculateQualityScore(form)
+			const improvements = FormMCP.generateImprovementSuggestions(form)
+
+			const result: MCPResult<FormQualityAssessment> = {
+				success: true,
+				data: {
+					...assessment,
+					improvements,
+				},
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'analyzeFormQuality',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.log('analyzeFormQuality', form, result)
+			return result
+		} catch (error) {
+			const mcpError: MCPError = {
+				code: 'ANALYSIS_ERROR',
+				message: 'Unexpected error analyzing form quality',
+				details: { actual: error },
+				timestamp: new Date(),
+			}
+
+			const result: MCPResult<FormQualityAssessment> = {
+				success: false,
+				errors: [mcpError],
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'analyzeFormQuality',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.error('analyzeFormQuality', mcpError)
+			return result
+		}
+	}
+
+	/**
+	 * Suggests form improvements based on quality analysis
+	 */
+	static suggestFormImprovements(form: Form): MCPResult<FormImprovement[]> {
+		const tracker = MCPLogger.createPerformanceTracker('suggestFormImprovements')
+
+		try {
+			console.log('💡 FormMCP: Generating improvement suggestions...')
+			
+			const improvements = FormMCP.generateImprovementSuggestions(form)
+
+			const result: MCPResult<FormImprovement[]> = {
+				success: true,
+				data: improvements,
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'suggestFormImprovements',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.log('suggestFormImprovements', form, result)
+			return result
+		} catch (error) {
+			const mcpError: MCPError = {
+				code: 'SUGGESTION_ERROR',
+				message: 'Unexpected error generating suggestions',
+				details: { actual: error },
+				timestamp: new Date(),
+			}
+
+			const result: MCPResult<FormImprovement[]> = {
+				success: false,
+				errors: [mcpError],
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'suggestFormImprovements',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.error('suggestFormImprovements', mcpError)
+			return result
+		}
+	}
+
+	/**
+	 * Detects form purpose based on title, description, and fields
+	 */
+	static detectFormPurpose(form: Form): MCPResult<FormPurpose> {
+		const tracker = MCPLogger.createPerformanceTracker('detectFormPurpose')
+
+		try {
+			console.log('🎯 FormMCP: Detecting form purpose...')
+			
+			const purpose = FormMCP.analyzeFormPurpose(form)
+
+			const result: MCPResult<FormPurpose> = {
+				success: true,
+				data: purpose,
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'detectFormPurpose',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.log('detectFormPurpose', form, result)
+			return result
+		} catch (error) {
+			const mcpError: MCPError = {
+				code: 'PURPOSE_ERROR',
+				message: 'Unexpected error detecting form purpose',
+				details: { actual: error },
+				timestamp: new Date(),
+			}
+
+			const result: MCPResult<FormPurpose> = {
+				success: false,
+				errors: [mcpError],
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'detectFormPurpose',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.error('detectFormPurpose', mcpError)
+			return result
+		}
+	}
+
+	/**
+	 * Suggests fields based on detected purpose
+	 */
+	static suggestPurposeBasedFields(purpose: FormPurpose): MCPResult<FormField[]> {
+		const tracker = MCPLogger.createPerformanceTracker('suggestPurposeBasedFields')
+
+		try {
+			console.log('📋 FormMCP: Suggesting purpose-based fields...')
+			console.log('🎯 Purpose type:', purpose.type)
+			
+			const suggestedFields = FormMCP.generatePurposeBasedFields(purpose)
+
+			const result: MCPResult<FormField[]> = {
+				success: true,
+				data: suggestedFields,
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'suggestPurposeBasedFields',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.log('suggestPurposeBasedFields', purpose, result)
+			return result
+		} catch (error) {
+			const mcpError: MCPError = {
+				code: 'SUGGESTION_ERROR',
+				message: 'Unexpected error suggesting purpose-based fields',
+				details: { actual: error },
+				timestamp: new Date(),
+			}
+
+			const result: MCPResult<FormField[]> = {
+				success: false,
+				errors: [mcpError],
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'suggestPurposeBasedFields',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.error('suggestPurposeBasedFields', mcpError)
+			return result
+		}
+	}
+
+	/**
+	 * Predicts form completion rate and identifies drop-off points
+	 */
+	static predictCompletionRate(form: Form): MCPResult<CompletionPrediction> {
+		const tracker = MCPLogger.createPerformanceTracker('predictCompletionRate')
+
+		try {
+			console.log('📊 FormMCP: Predicting completion rate...')
+			
+			const prediction = FormMCP.calculateCompletionPrediction(form)
+
+			const result: MCPResult<CompletionPrediction> = {
+				success: true,
+				data: prediction,
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'predictCompletionRate',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.log('predictCompletionRate', form, result)
+			return result
+		} catch (error) {
+			const mcpError: MCPError = {
+				code: 'PREDICTION_ERROR',
+				message: 'Unexpected error predicting completion rate',
+				details: { actual: error },
+				timestamp: new Date(),
+			}
+
+			const result: MCPResult<CompletionPrediction> = {
+				success: false,
+				errors: [mcpError],
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'predictCompletionRate',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.error('predictCompletionRate', mcpError)
+			return result
+		}
+	}
+
+	/**
+	 * Identifies potential drop-off points in the form
+	 */
+	static identifyDropOffPoints(form: Form): MCPResult<DropOffPoint[]> {
+		const tracker = MCPLogger.createPerformanceTracker('identifyDropOffPoints')
+
+		try {
+			console.log('⚠️ FormMCP: Identifying drop-off points...')
+			
+			const dropOffPoints = FormMCP.analyzeDropOffPoints(form)
+
+			const result: MCPResult<DropOffPoint[]> = {
+				success: true,
+				data: dropOffPoints,
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'identifyDropOffPoints',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.log('identifyDropOffPoints', form, result)
+			return result
+		} catch (error) {
+			const mcpError: MCPError = {
+				code: 'ANALYSIS_ERROR',
+				message: 'Unexpected error identifying drop-off points',
+				details: { actual: error },
+				timestamp: new Date(),
+			}
+
+			const result: MCPResult<DropOffPoint[]> = {
+				success: false,
+				errors: [mcpError],
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'identifyDropOffPoints',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.error('identifyDropOffPoints', mcpError)
+			return result
+		}
+	}
+
+	// ===== PRIVATE HELPER METHODS =====
+
+	/**
+	 * Calculates quality score for different dimensions
+	 */
+	private static calculateQualityScore(form: Form): Omit<FormQualityAssessment, 'improvements'> {
+		const usability = FormMCP.calculateUsabilityScore(form)
+		const accessibility = FormMCP.calculateAccessibilityScore(form)
+		const performance = FormMCP.calculatePerformanceScore(form)
+		const security = FormMCP.calculateSecurityScore(form)
+		
+		const overall = Math.round((usability + accessibility + performance + security) / 4)
+
+		return {
+			overall,
+			usability,
+			accessibility,
+			performance,
+			security,
+		}
+	}
+
+	/**
+	 * Calculates usability score (0-100)
+	 */
+	private static calculateUsabilityScore(form: Form): number {
+		let score = 100
+
+		// Penalize for too many fields
+		if (form.fields.length > 10) score -= 10
+		if (form.fields.length > 20) score -= 15
+
+		// Check for required fields
+		const requiredFields = form.fields.filter(f => f.required)
+		if (requiredFields.length > 5) score -= 10
+
+		// Check for field labels
+		const fieldsWithoutLabels = form.fields.filter(f => !f.label?.trim())
+		score -= fieldsWithoutLabels.length * 5
+
+		// Check for placeholder text
+		const fieldsWithoutPlaceholders = form.fields.filter(f => !f.placeholder?.trim())
+		score -= Math.floor(fieldsWithoutPlaceholders.length * 2)
+
+		return Math.max(0, score)
+	}
+
+	/**
+	 * Calculates accessibility score (0-100)
+	 */
+	private static calculateAccessibilityScore(form: Form): number {
+		let score = 100
+
+		// Check for proper field labels
+		const fieldsWithoutLabels = form.fields.filter(f => !f.label?.trim())
+		score -= fieldsWithoutLabels.length * 10
+
+		// Check for required field indicators
+		const requiredFieldsWithoutIndicators = form.fields.filter(f => f.required && !f.label?.includes('*'))
+		score -= requiredFieldsWithoutIndicators.length * 5
+
+		// Check for field types that might need special accessibility considerations
+		const complexFields = form.fields.filter(f => ['file', 'signature'].includes(f.type))
+		score -= complexFields.length * 3
+
+		return Math.max(0, score)
+	}
+
+	/**
+	 * Calculates performance score (0-100)
+	 */
+	private static calculatePerformanceScore(form: Form): number {
+		let score = 100
+
+		// Penalize for too many fields
+		if (form.fields.length > 15) score -= 10
+		if (form.fields.length > 25) score -= 20
+
+		// Check for file upload fields (can impact performance)
+		const fileFields = form.fields.filter(f => f.type === 'file')
+		score -= fileFields.length * 5
+
+		// Check for complex field types
+		const complexFields = form.fields.filter(f => ['signature', 'textarea'].includes(f.type))
+		score -= complexFields.length * 2
+
+		return Math.max(0, score)
+	}
+
+	/**
+	 * Calculates security score (0-100)
+	 */
+	private static calculateSecurityScore(form: Form): number {
+		let score = 100
+
+		// Check for email fields (should have validation)
+		const emailFields = form.fields.filter(f => f.type === 'email')
+		score -= emailFields.length * 2 // Assume they need validation
+
+		// Check for file upload fields (security risk)
+		const fileFields = form.fields.filter(f => f.type === 'file')
+		score -= fileFields.length * 10
+
+		// Check for required fields (good for data integrity)
+		const requiredFields = form.fields.filter(f => f.required)
+		score += Math.min(requiredFields.length * 2, 10)
+
+		return Math.max(0, Math.min(100, score))
+	}
+
+	/**
+	 * Generates improvement suggestions based on quality analysis
+	 */
+	private static generateImprovementSuggestions(form: Form): FormImprovement[] {
+		const improvements: FormImprovement[] = []
+
+		// Usability improvements
+		if (form.fields.length > 10) {
+			improvements.push({
+				id: 'reduce-field-count',
+				type: 'usability',
+				title: 'Reduce Field Count',
+				description: 'Consider reducing the number of fields to improve completion rates',
+				impact: 'high',
+				effort: 'medium',
+				action: 'Remove non-essential fields or split into multiple steps',
+			})
+		}
+
+		// Accessibility improvements
+		const fieldsWithoutLabels = form.fields.filter(f => !f.label?.trim())
+		if (fieldsWithoutLabels.length > 0) {
+			improvements.push({
+				id: 'add-field-labels',
+				type: 'accessibility',
+				title: 'Add Field Labels',
+				description: 'All fields should have descriptive labels for accessibility',
+				impact: 'high',
+				effort: 'low',
+				action: 'Add clear, descriptive labels to all fields',
+			})
+		}
+
+		// Performance improvements
+		const fileFields = form.fields.filter(f => f.type === 'file')
+		if (fileFields.length > 2) {
+			improvements.push({
+				id: 'optimize-file-uploads',
+				type: 'performance',
+				title: 'Optimize File Uploads',
+				description: 'Multiple file upload fields can impact form performance',
+				impact: 'medium',
+				effort: 'medium',
+				action: 'Consider combining file uploads or adding file size limits',
+			})
+		}
+
+		// Security improvements
+		const emailFields = form.fields.filter(f => f.type === 'email')
+		if (emailFields.length > 0) {
+			improvements.push({
+				id: 'add-email-validation',
+				type: 'security',
+				title: 'Add Email Validation',
+				description: 'Email fields should have proper validation',
+				impact: 'high',
+				effort: 'low',
+				action: 'Add email format validation to email fields',
+			})
+		}
+
+		return improvements
+	}
+
+	/**
+	 * Analyzes form purpose based on title, description, and fields
+	 */
+	private static analyzeFormPurpose(form: Form): FormPurpose {
+		const text = `${form.title} ${form.description || ''}`.toLowerCase()
+		const fieldTypes = form.fields.map(f => f.type)
+		const fieldLabels = form.fields.map(f => f.label?.toLowerCase() || '')
+
+		// Contact form detection
+		if (text.includes('contact') || text.includes('reach') || text.includes('get in touch')) {
+			return {
+				type: 'contact',
+				confidence: 0.9,
+				keywords: ['contact', 'reach', 'touch'],
+				suggestedFields: FormMCP.getContactFormFields(),
+			}
+		}
+
+		// Registration form detection
+		if (text.includes('register') || text.includes('sign up') || text.includes('join')) {
+			return {
+				type: 'registration',
+				confidence: 0.9,
+				keywords: ['register', 'sign up', 'join'],
+				suggestedFields: FormMCP.getRegistrationFormFields(),
+			}
+		}
+
+		// Survey form detection
+		if (text.includes('survey') || text.includes('feedback') || text.includes('opinion')) {
+			return {
+				type: 'survey',
+				confidence: 0.8,
+				keywords: ['survey', 'feedback', 'opinion'],
+				suggestedFields: FormMCP.getSurveyFormFields(),
+			}
+		}
+
+		// Application form detection
+		if (text.includes('application') || text.includes('apply') || text.includes('candidate')) {
+			return {
+				type: 'application',
+				confidence: 0.9,
+				keywords: ['application', 'apply', 'candidate'],
+				suggestedFields: FormMCP.getApplicationFormFields(),
+			}
+		}
+
+		// Lead generation detection
+		if (fieldTypes.includes('email') && fieldTypes.includes('phone')) {
+			return {
+				type: 'lead-generation',
+				confidence: 0.7,
+				keywords: ['lead', 'contact', 'information'],
+				suggestedFields: FormMCP.getLeadGenerationFields(),
+			}
+		}
+
+		// Default to other
+		return {
+			type: 'other',
+			confidence: 0.5,
+			keywords: [],
+			suggestedFields: [],
+		}
+	}
+
+	/**
+	 * Generates purpose-based field suggestions
+	 */
+	private static generatePurposeBasedFields(purpose: FormPurpose): FormField[] {
+		return purpose.suggestedFields
+	}
+
+	/**
+	 * Calculates completion prediction
+	 */
+	private static calculateCompletionPrediction(form: Form): CompletionPrediction {
+		let baseRate = 0.8 // 80% base completion rate
+
+		// Adjust based on field count
+		if (form.fields.length > 10) baseRate -= 0.1
+		if (form.fields.length > 20) baseRate -= 0.15
+
+		// Adjust based on required fields
+		const requiredFields = form.fields.filter(f => f.required)
+		if (requiredFields.length > 5) baseRate -= 0.1
+
+		// Adjust based on complex fields
+		const complexFields = form.fields.filter(f => ['file', 'signature', 'textarea'].includes(f.type))
+		baseRate -= complexFields.length * 0.05
+
+		const estimatedTime = form.fields.length * 30 // 30 seconds per field
+		const dropOffPoints = FormMCP.analyzeDropOffPoints(form)
+
+		return {
+			rate: Math.max(0.1, Math.min(0.95, baseRate)),
+			estimatedTime,
+			dropOffPoints,
+			confidence: 0.7,
+		}
+	}
+
+	/**
+	 * Analyzes potential drop-off points
+	 */
+	private static analyzeDropOffPoints(form: Form): DropOffPoint[] {
+		const dropOffPoints: DropOffPoint[] = []
+
+		form.fields.forEach((field, index) => {
+			// File upload fields are common drop-off points
+			if (field.type === 'file') {
+				dropOffPoints.push({
+					fieldId: field.id,
+					fieldLabel: field.label,
+					probability: 0.3,
+					reason: 'File uploads can be intimidating',
+					suggestion: 'Consider making file uploads optional or providing clear instructions',
+				})
+			}
+
+			// Long forms tend to have drop-offs after 10-15 fields
+			if (index >= 10 && index < 15) {
+				dropOffPoints.push({
+					fieldId: field.id,
+					fieldLabel: field.label,
+					probability: 0.2,
+					reason: 'Forms become less engaging after 10+ fields',
+					suggestion: 'Consider splitting the form into multiple steps',
+				})
+			}
+
+			// Required fields without clear indication
+			if (field.required && !field.label?.includes('*')) {
+				dropOffPoints.push({
+					fieldId: field.id,
+					fieldLabel: field.label,
+					probability: 0.15,
+					reason: 'Required fields without clear indication can cause confusion',
+					suggestion: 'Add asterisk (*) to required field labels',
+				})
+			}
+		})
+
+		return dropOffPoints
+	}
+
+	// ===== PURPOSE-BASED FIELD TEMPLATES =====
+
+	private static getContactFormFields(): FormField[] {
+		return [
+			{
+				id: generateId(),
+				type: 'text',
+				label: 'Name',
+				required: true,
+				placeholder: 'Enter your full name',
+			},
+			{
+				id: generateId(),
+				type: 'email',
+				label: 'Email',
+				required: true,
+				placeholder: 'Enter your email address',
+			},
+			{
+				id: generateId(),
+				type: 'phone',
+				label: 'Phone',
+				required: false,
+				placeholder: 'Enter your phone number',
+			},
+			{
+				id: generateId(),
+				type: 'textarea',
+				label: 'Message',
+				required: true,
+				placeholder: 'Enter your message',
+			},
+		]
+	}
+
+	private static getRegistrationFormFields(): FormField[] {
+		return [
+			{
+				id: generateId(),
+				type: 'text',
+				label: 'First Name',
+				required: true,
+				placeholder: 'Enter your first name',
+			},
+			{
+				id: generateId(),
+				type: 'text',
+				label: 'Last Name',
+				required: true,
+				placeholder: 'Enter your last name',
+			},
+			{
+				id: generateId(),
+				type: 'email',
+				label: 'Email',
+				required: true,
+				placeholder: 'Enter your email address',
+			},
+			{
+				id: generateId(),
+				type: 'phone',
+				label: 'Phone',
+				required: false,
+				placeholder: 'Enter your phone number',
+			},
+		]
+	}
+
+	private static getSurveyFormFields(): FormField[] {
+		return [
+			{
+				id: generateId(),
+				type: 'radio',
+				label: 'How satisfied are you?',
+				required: true,
+				options: ['Very Satisfied', 'Satisfied', 'Neutral', 'Dissatisfied', 'Very Dissatisfied'],
+			},
+			{
+				id: generateId(),
+				type: 'textarea',
+				label: 'Additional Comments',
+				required: false,
+				placeholder: 'Share any additional thoughts...',
+			},
+		]
+	}
+
+	private static getApplicationFormFields(): FormField[] {
+		return [
+			{
+				id: generateId(),
+				type: 'text',
+				label: 'Full Name',
+				required: true,
+				placeholder: 'Enter your full name',
+			},
+			{
+				id: generateId(),
+				type: 'email',
+				label: 'Email',
+				required: true,
+				placeholder: 'Enter your email address',
+			},
+			{
+				id: generateId(),
+				type: 'file',
+				label: 'Resume',
+				required: true,
+			},
+			{
+				id: generateId(),
+				type: 'textarea',
+				label: 'Cover Letter',
+				required: false,
+				placeholder: 'Tell us why you\'re interested...',
+			},
+		]
+	}
+
+	private static getLeadGenerationFields(): FormField[] {
+		return [
+			{
+				id: generateId(),
+				type: 'text',
+				label: 'Company Name',
+				required: true,
+				placeholder: 'Enter your company name',
+			},
+			{
+				id: generateId(),
+				type: 'email',
+				label: 'Business Email',
+				required: true,
+				placeholder: 'Enter your business email',
+			},
+			{
+				id: generateId(),
+				type: 'phone',
+				label: 'Phone Number',
+				required: true,
+				placeholder: 'Enter your phone number',
+			},
+			{
+				id: generateId(),
+				type: 'select',
+				label: 'Company Size',
+				required: false,
+				options: ['1-10', '11-50', '51-200', '201-1000', '1000+'],
+			},
+		]
 	}
 }

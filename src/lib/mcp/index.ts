@@ -22,6 +22,9 @@ export { CSVParserMCP } from './implementations/CSVParserMCP'
 export { FieldTypeDetectorMCP } from './implementations/FieldTypeDetectorMCP'
 export { FormGeneratorMCP } from './implementations/FormGeneratorMCP'
 
+// Assistance MCPs
+export { FormAssistanceMCP } from './implementations/FormAssistanceMCP'
+
 export { MCPLogger } from './implementations/logger'
 
 // MCP Configuration

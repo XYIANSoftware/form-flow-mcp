@@ -13,6 +13,57 @@ import React from 'react'
 import { MCPResult, FieldRenderProps, MCPError } from '../protocols/types'
 import { MCPLogger } from './logger'
 import { FormField, FieldType } from '@/types'
+import { generateId } from '@/utils'
+
+// New types for assistance features
+export interface FieldSuggestion {
+	id: string
+	type: 'field' | 'validation' | 'grouping' | 'placement'
+	title: string
+	description: string
+	field?: FormField
+	validation?: ValidationSuggestion
+	grouping?: FieldGrouping
+	placement?: FieldPlacement
+	confidence: number
+	impact: 'low' | 'medium' | 'high'
+}
+
+export interface ValidationSuggestion {
+	rule: string
+	message: string
+	pattern?: string
+	min?: number
+	max?: number
+	required?: boolean
+}
+
+export interface FieldGrouping {
+	groupId: string
+	groupName: string
+	fields: string[]
+	reason: string
+}
+
+export interface FieldPlacement {
+	position: number
+	reason: string
+	suggestedOrder: FormField[]
+}
+
+export interface ValidationConflict {
+	fieldId: string
+	conflictType: 'pattern' | 'range' | 'required' | 'options'
+	conflict: string
+	suggestion: string
+}
+
+export interface FormContext {
+	fields: FormField[]
+	purpose?: string
+	industry?: string
+	userPreferences?: Record<string, unknown>
+}
 
 // PrimeReact Components
 import { InputText } from 'primereact/inputtext'
@@ -1018,5 +1069,637 @@ export class FieldMCP {
 			default:
 				return value
 		}
+	}
+
+	// ===== ASSISTANCE METHODS =====
+
+	/**
+	 * Suggests next fields based on current fields and context
+	 */
+	static suggestNextFields(
+		currentFields: FormField[],
+		context: FormContext
+	): MCPResult<FieldSuggestion[]> {
+		const tracker = MCPLogger.createPerformanceTracker('suggestNextFields')
+
+		try {
+			console.log('💡 FieldMCP: Generating field suggestions...')
+			console.log('📊 Current fields:', currentFields.length)
+			console.log('🎯 Context purpose:', context.purpose)
+
+			const suggestions = FieldMCP.generateFieldSuggestions(currentFields, context)
+
+			const result: MCPResult<FieldSuggestion[]> = {
+				success: true,
+				data: suggestions,
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'suggestNextFields',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.log('suggestNextFields', { currentFields, context }, result)
+			return result
+		} catch (error) {
+			const mcpError: MCPError = {
+				code: 'SUGGESTION_ERROR',
+				message: 'Unexpected error generating field suggestions',
+				details: { actual: error },
+				timestamp: new Date(),
+			}
+
+			const result: MCPResult<FieldSuggestion[]> = {
+				success: false,
+				errors: [mcpError],
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'suggestNextFields',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.error('suggestNextFields', mcpError)
+			return result
+		}
+	}
+
+	/**
+	 * Suggests field type based on field name and context
+	 */
+	static suggestFieldType(
+		fieldName: string,
+		context: FormContext
+	): MCPResult<FieldType> {
+		const tracker = MCPLogger.createPerformanceTracker('suggestFieldType')
+
+		try {
+			console.log('🔍 FieldMCP: Suggesting field type...')
+			console.log('🏷️ Field name:', fieldName)
+
+			const suggestedType = FieldMCP.analyzeFieldName(fieldName, context)
+
+			const result: MCPResult<FieldType> = {
+				success: true,
+				data: suggestedType,
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'suggestFieldType',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.log('suggestFieldType', { fieldName, context }, result)
+			return result
+		} catch (error) {
+			const mcpError: MCPError = {
+				code: 'SUGGESTION_ERROR',
+				message: 'Unexpected error suggesting field type',
+				details: { actual: error },
+				timestamp: new Date(),
+			}
+
+			const result: MCPResult<FieldType> = {
+				success: false,
+				errors: [mcpError],
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'suggestFieldType',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.error('suggestFieldType', mcpError)
+			return result
+		}
+	}
+
+	/**
+	 * Suggests validation rules for a field
+	 */
+	static suggestValidationRules(field: FormField): MCPResult<ValidationSuggestion[]> {
+		const tracker = MCPLogger.createPerformanceTracker('suggestValidationRules')
+
+		try {
+			console.log('✅ FieldMCP: Suggesting validation rules...')
+			console.log('🏷️ Field:', field.label, field.type)
+
+			const suggestions = FieldMCP.generateValidationSuggestions(field)
+
+			const result: MCPResult<ValidationSuggestion[]> = {
+				success: true,
+				data: suggestions,
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'suggestValidationRules',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.log('suggestValidationRules', field, result)
+			return result
+		} catch (error) {
+			const mcpError: MCPError = {
+				code: 'SUGGESTION_ERROR',
+				message: 'Unexpected error suggesting validation rules',
+				details: { actual: error },
+				timestamp: new Date(),
+			}
+
+			const result: MCPResult<ValidationSuggestion[]> = {
+				success: false,
+				errors: [mcpError],
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'suggestValidationRules',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.error('suggestValidationRules', mcpError)
+			return result
+		}
+	}
+
+	/**
+	 * Detects validation conflicts between fields
+	 */
+	static detectValidationConflicts(fields: FormField[]): MCPResult<ValidationConflict[]> {
+		const tracker = MCPLogger.createPerformanceTracker('detectValidationConflicts')
+
+		try {
+			console.log('⚠️ FieldMCP: Detecting validation conflicts...')
+			console.log('📊 Fields to check:', fields.length)
+
+			const conflicts = FieldMCP.analyzeValidationConflicts(fields)
+
+			const result: MCPResult<ValidationConflict[]> = {
+				success: true,
+				data: conflicts,
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'detectValidationConflicts',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.log('detectValidationConflicts', fields, result)
+			return result
+		} catch (error) {
+			const mcpError: MCPError = {
+				code: 'ANALYSIS_ERROR',
+				message: 'Unexpected error detecting validation conflicts',
+				details: { actual: error },
+				timestamp: new Date(),
+			}
+
+			const result: MCPResult<ValidationConflict[]> = {
+				success: false,
+				errors: [mcpError],
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'detectValidationConflicts',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.error('detectValidationConflicts', mcpError)
+			return result
+		}
+	}
+
+	/**
+	 * Optimizes field placement for better UX
+	 */
+	static optimizeFieldPlacement(fields: FormField[]): MCPResult<FormField[]> {
+		const tracker = MCPLogger.createPerformanceTracker('optimizeFieldPlacement')
+
+		try {
+			console.log('📐 FieldMCP: Optimizing field placement...')
+			console.log('📊 Fields to optimize:', fields.length)
+
+			const optimizedFields = FieldMCP.reorderFieldsForUX(fields)
+
+			const result: MCPResult<FormField[]> = {
+				success: true,
+				data: optimizedFields,
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'optimizeFieldPlacement',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.log('optimizeFieldPlacement', fields, result)
+			return result
+		} catch (error) {
+			const mcpError: MCPError = {
+				code: 'OPTIMIZATION_ERROR',
+				message: 'Unexpected error optimizing field placement',
+				details: { actual: error },
+				timestamp: new Date(),
+			}
+
+			const result: MCPResult<FormField[]> = {
+				success: false,
+				errors: [mcpError],
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'optimizeFieldPlacement',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.error('optimizeFieldPlacement', mcpError)
+			return result
+		}
+	}
+
+	/**
+	 * Suggests field grouping for better organization
+	 */
+	static suggestFieldGrouping(fields: FormField[]): MCPResult<FieldGrouping[]> {
+		const tracker = MCPLogger.createPerformanceTracker('suggestFieldGrouping')
+
+		try {
+			console.log('📦 FieldMCP: Suggesting field grouping...')
+			console.log('📊 Fields to group:', fields.length)
+
+			const groupings = FieldMCP.analyzeFieldGroupings(fields)
+
+			const result: MCPResult<FieldGrouping[]> = {
+				success: true,
+				data: groupings,
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'suggestFieldGrouping',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.log('suggestFieldGrouping', fields, result)
+			return result
+		} catch (error) {
+			const mcpError: MCPError = {
+				code: 'SUGGESTION_ERROR',
+				message: 'Unexpected error suggesting field grouping',
+				details: { actual: error },
+				timestamp: new Date(),
+			}
+
+			const result: MCPResult<FieldGrouping[]> = {
+				success: false,
+				errors: [mcpError],
+				metadata: {
+					executionTime: tracker.end(),
+					operation: 'suggestFieldGrouping',
+					timestamp: new Date(),
+				},
+			}
+
+			MCPLogger.error('suggestFieldGrouping', mcpError)
+			return result
+		}
+	}
+
+	// ===== PRIVATE HELPER METHODS =====
+
+	/**
+	 * Generates field suggestions based on current fields and context
+	 */
+	private static generateFieldSuggestions(
+		currentFields: FormField[],
+		context: FormContext
+	): FieldSuggestion[] {
+		const suggestions: FieldSuggestion[] = []
+		const existingFieldTypes = currentFields.map(f => f.type)
+		const existingLabels = currentFields.map(f => f.label?.toLowerCase() || '')
+
+		// Suggest missing common fields
+		if (!existingFieldTypes.includes('email') && !existingLabels.some(l => l.includes('email'))) {
+			suggestions.push({
+				id: generateId(),
+				type: 'field',
+				title: 'Add Email Field',
+				description: 'Email fields are commonly needed for contact and registration forms',
+				field: {
+					id: generateId(),
+					type: 'email',
+					label: 'Email Address',
+					required: true,
+					placeholder: 'Enter your email address',
+				},
+				confidence: 0.8,
+				impact: 'high',
+			})
+		}
+
+		if (!existingFieldTypes.includes('phone') && !existingLabels.some(l => l.includes('phone'))) {
+			suggestions.push({
+				id: generateId(),
+				type: 'field',
+				title: 'Add Phone Field',
+				description: 'Phone numbers are often required for contact forms',
+				field: {
+					id: generateId(),
+					type: 'phone',
+					label: 'Phone Number',
+					required: false,
+					placeholder: 'Enter your phone number',
+				},
+				confidence: 0.7,
+				impact: 'medium',
+			})
+		}
+
+		// Suggest based on form purpose
+		if (context.purpose === 'contact' && !existingFieldTypes.includes('textarea')) {
+			suggestions.push({
+				id: generateId(),
+				type: 'field',
+				title: 'Add Message Field',
+				description: 'Contact forms typically need a message field',
+				field: {
+					id: generateId(),
+					type: 'textarea',
+					label: 'Message',
+					required: true,
+					placeholder: 'Enter your message',
+				},
+				confidence: 0.9,
+				impact: 'high',
+			})
+		}
+
+		// Suggest grouping if form is getting long
+		if (currentFields.length > 5) {
+			const grouping = FieldMCP.analyzeFieldGroupings(currentFields)
+			if (grouping.length > 0) {
+				suggestions.push({
+					id: generateId(),
+					type: 'grouping',
+					title: 'Group Related Fields',
+					description: 'Consider grouping related fields for better organization',
+					grouping: grouping[0],
+					confidence: 0.8,
+					impact: 'medium',
+				})
+			}
+		}
+
+		return suggestions
+	}
+
+	/**
+	 * Analyzes field name to suggest appropriate type
+	 */
+	private static analyzeFieldName(fieldName: string, context: FormContext): FieldType {
+		const name = fieldName.toLowerCase()
+
+		// Email detection
+		if (name.includes('email') || name.includes('e-mail')) return 'email'
+
+		// Phone detection
+		if (name.includes('phone') || name.includes('mobile') || name.includes('telephone')) return 'phone'
+
+		// Name detection
+		if (name.includes('name') && !name.includes('company')) return 'text'
+
+		// Address detection
+		if (name.includes('address') || name.includes('street') || name.includes('location')) return 'address'
+
+		// Date detection
+		if (name.includes('date') || name.includes('birth') || name.includes('dob')) return 'date'
+
+		// Number detection
+		if (name.includes('age') || name.includes('count') || name.includes('quantity')) return 'number'
+
+		// Money detection
+		if (name.includes('price') || name.includes('cost') || name.includes('amount') || name.includes('salary')) return 'money'
+
+		// URL detection
+		if (name.includes('website') || name.includes('url') || name.includes('link')) return 'url'
+
+		// Textarea detection
+		if (name.includes('message') || name.includes('comment') || name.includes('description') || name.includes('notes')) return 'textarea'
+
+		// File detection
+		if (name.includes('file') || name.includes('document') || name.includes('attachment') || name.includes('resume')) return 'file'
+
+		// Default to text
+		return 'text'
+	}
+
+	/**
+	 * Generates validation suggestions for a field
+	 */
+	private static generateValidationSuggestions(field: FormField): ValidationSuggestion[] {
+		const suggestions: ValidationSuggestion[] = []
+
+		// Required field suggestion
+		if (!field.required && ['email', 'phone', 'name'].some(type => field.label?.toLowerCase().includes(type))) {
+			suggestions.push({
+				rule: 'required',
+				message: `${field.label} is required`,
+				required: true,
+			})
+		}
+
+		// Type-specific validation suggestions
+		switch (field.type) {
+			case 'email':
+				suggestions.push({
+					rule: 'pattern',
+					message: 'Please enter a valid email address',
+					pattern: '^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$',
+				})
+				break
+
+			case 'phone':
+				suggestions.push({
+					rule: 'pattern',
+					message: 'Please enter a valid phone number',
+					pattern: '^[\\+]?[1-9][\\d]{0,15}$',
+				})
+				break
+
+			case 'number':
+				if (field.label?.toLowerCase().includes('age')) {
+					suggestions.push({
+						rule: 'range',
+						message: 'Age must be between 0 and 120',
+						min: 0,
+						max: 120,
+					})
+				}
+				break
+
+			case 'url':
+				suggestions.push({
+					rule: 'pattern',
+					message: 'Please enter a valid URL',
+					pattern: '^https?:\\/\\/.+',
+				})
+				break
+		}
+
+		return suggestions
+	}
+
+	/**
+	 * Analyzes validation conflicts between fields
+	 */
+	private static analyzeValidationConflicts(fields: FormField[]): ValidationConflict[] {
+		const conflicts: ValidationConflict[] = []
+
+		// Check for duplicate field labels
+		const labels = fields.map(f => f.label?.toLowerCase().trim() || '')
+		const duplicates = labels.filter((label, index) => labels.indexOf(label) !== index && label !== '')
+
+		duplicates.forEach(duplicate => {
+			const conflictingFields = fields.filter(f => f.label?.toLowerCase().trim() === duplicate)
+			conflicts.push({
+				fieldId: conflictingFields[0].id,
+				conflictType: 'required',
+				conflict: `Duplicate field label: "${duplicate}"`,
+				suggestion: 'Use unique labels for each field to avoid confusion',
+			})
+		})
+
+		// Check for conflicting validation rules
+		fields.forEach(field => {
+			if (field.validation) {
+				if (field.validation.min !== undefined && field.validation.max !== undefined) {
+					if (field.validation.min > field.validation.max) {
+						conflicts.push({
+							fieldId: field.id,
+							conflictType: 'range',
+							conflict: 'Minimum value is greater than maximum value',
+							suggestion: 'Adjust min/max values so minimum is less than maximum',
+						})
+					}
+				}
+			}
+		})
+
+		return conflicts
+	}
+
+	/**
+	 * Reorders fields for better UX
+	 */
+	private static reorderFieldsForUX(fields: FormField[]): FormField[] {
+		// Define field priority order for better UX
+		const fieldPriority: Record<FieldType, number> = {
+			// Personal info first
+			text: 1,
+			email: 2,
+			phone: 3,
+			// Dates and numbers
+			date: 4,
+			number: 5,
+			// Selection fields
+			select: 6,
+			radio: 7,
+			checkbox: 8,
+			// Complex fields last
+			textarea: 9,
+			file: 10,
+			signature: 11,
+			// Other fields
+			email: 2,
+			password: 1,
+			url: 5,
+			search: 5,
+			datetime: 4,
+			time: 4,
+			month: 4,
+			week: 4,
+			year: 4,
+			'rich-text': 9,
+			markdown: 9,
+			multiselect: 6,
+			yesno: 7,
+			toggle: 7,
+			money: 5,
+			percentage: 5,
+			currency: 5,
+			address: 3,
+			country: 6,
+			state: 6,
+			zipcode: 3,
+			image: 10,
+			audio: 10,
+			video: 10,
+			rating: 8,
+			slider: 8,
+			range: 8,
+			likert: 8,
+			color: 5,
+			tags: 6,
+			autocomplete: 6,
+			location: 3,
+			matrix: 8,
+		}
+
+		return [...fields].sort((a, b) => {
+			const priorityA = fieldPriority[a.type] || 99
+			const priorityB = fieldPriority[b.type] || 99
+			return priorityA - priorityB
+		})
+	}
+
+	/**
+	 * Analyzes field groupings for better organization
+	 */
+	private static analyzeFieldGroupings(fields: FormField[]): FieldGrouping[] {
+		const groupings: FieldGrouping[] = []
+
+		// Personal information grouping
+		const personalFields = fields.filter(f => 
+			['name', 'first', 'last', 'email', 'phone'].some(keyword => 
+				f.label?.toLowerCase().includes(keyword)
+			)
+		)
+		if (personalFields.length >= 2) {
+			groupings.push({
+				groupId: generateId(),
+				groupName: 'Personal Information',
+				fields: personalFields.map(f => f.id),
+				reason: 'Group personal information fields together for better organization',
+			})
+		}
+
+		// Contact information grouping
+		const contactFields = fields.filter(f => 
+			['address', 'city', 'state', 'zip', 'country'].some(keyword => 
+				f.label?.toLowerCase().includes(keyword)
+			)
+		)
+		if (contactFields.length >= 2) {
+			groupings.push({
+				groupId: generateId(),
+				groupName: 'Contact Information',
+				fields: contactFields.map(f => f.id),
+				reason: 'Group address and location fields together',
+			})
+		}
+
+		// Preferences grouping
+		const preferenceFields = fields.filter(f => 
+			['preference', 'option', 'choice', 'interest'].some(keyword => 
+				f.label?.toLowerCase().includes(keyword)
+			)
+		)
+		if (preferenceFields.length >= 2) {
+			groupings.push({
+				groupId: generateId(),
+				groupName: 'Preferences',
+				fields: preferenceFields.map(f => f.id),
+				reason: 'Group preference and choice fields together',
+			})
+		}
+
+		return groupings
 	}
 }
