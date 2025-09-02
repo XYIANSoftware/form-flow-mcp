@@ -86,7 +86,7 @@ export class FormGeneratorMCP {
 				fieldOverrides = [],
 				detectionStrategy = 'auto',
 				includePreview = true,
-				validationLevel = 'comprehensive', // Available for future use
+				// validationLevel = 'comprehensive', // Available for future use
 			} = options
 
 			// Stage 1: Parse CSV
@@ -367,7 +367,7 @@ export class FormGeneratorMCP {
 	 */
 	static previewFormGeneration(
 		csvContent: string,
-		_options: FormGenerationOptions = {} // Available for future use
+		// _options: FormGenerationOptions = {} // Available for future use
 	): MCPResult<FormPreview> {
 		const tracker = MCPLogger.createPerformanceTracker('previewFormGeneration')
 

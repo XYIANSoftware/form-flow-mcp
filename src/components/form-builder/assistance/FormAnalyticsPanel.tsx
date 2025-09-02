@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React from 'react'
 import { Card } from 'primereact/card'
 import { Button } from 'primereact/button'
 import { ProgressSpinner } from 'primereact/progressspinner'
@@ -10,13 +10,13 @@ import { ProgressBar } from 'primereact/progressbar'
 import { Badge } from 'primereact/badge'
 import { Chart } from 'primereact/chart'
 import { FormField, Form } from '@/types'
-import {
-	FormAnalyticsMCP,
-	FormAnalytics,
-	AnalyticsInsight,
-	PredictiveInsight,
-	BenchmarkComparison,
-} from '@/lib/mcp'
+// import {
+// 	// FormAnalyticsMCP,
+// 	FormAnalytics,
+// 	AnalyticsInsight,
+// 	PredictiveInsight,
+// 	BenchmarkComparison,
+// } from '@/lib/mcp'
 
 interface FormAnalyticsPanelProps {
 	form: Form
@@ -25,61 +25,61 @@ interface FormAnalyticsPanelProps {
 }
 
 export default function FormAnalyticsPanel({
-	form,
-	fields,
+	// form,
+	// fields,
 	className = '',
 }: FormAnalyticsPanelProps) {
-	const [loading, setLoading] = useState(false)
-	const [error, setError] = useState<string | null>(null)
-	const [analytics, setAnalytics] = useState<FormAnalytics | null>(null)
-	const [insights, setInsights] = useState<AnalyticsInsight[]>([])
-	const [predictions, setPredictions] = useState<PredictiveInsight[]>([])
-	const [benchmarks, setBenchmarks] = useState<BenchmarkComparison | null>(null)
+	// const [loading, setLoading] = useState(false)
+	// const [error, setError] = useState<string | null>(null)
+	// const [analytics, setAnalytics] = useState<FormAnalytics | null>(null)
+	// const [insights, setInsights] = useState<AnalyticsInsight[]>([])
+	// const [predictions, setPredictions] = useState<PredictiveInsight[]>([])
+	// const [benchmarks, setBenchmarks] = useState<BenchmarkComparison | null>(null)
 
-	const analyticsMCP = new FormAnalyticsMCP()
+	// const analyticsMCP = new FormAnalyticsMCP()
 
-	const analyzeForm = useCallback(async () => {
-		setLoading(true)
-		setError(null)
+	// const analyzeForm = useCallback(async () => {
+	// 	setLoading(true)
+	// 	setError(null)
 
-		try {
-			// Analyze form performance
-			const analyticsResult = await analyticsMCP.analyzeFormPerformance(form)
-			if (analyticsResult.success && analyticsResult.data) {
-				setAnalytics(analyticsResult.data)
+	// 	try {
+	// 		// Analyze form performance
+	// 		const analyticsResult = await analyticsMCP.analyzeFormPerformance(form)
+	// 		if (analyticsResult.success && analyticsResult.data) {
+	// 			setAnalytics(analyticsResult.data)
 
-				// Generate insights
-				const insightsResult = await analyticsMCP.generateActionableInsights(analyticsResult.data)
-				if (insightsResult.success && insightsResult.data) {
-					setInsights(insightsResult.data)
-				}
+	// 			// Generate insights
+	// 			const insightsResult = await analyticsMCP.generateActionableInsights(analyticsResult.data)
+	// 			if (insightsResult.success && insightsResult.data) {
+	// 				setInsights(insightsResult.data)
+	// 			}
 
-				// Generate predictions
-				const predictionsResult = await analyticsMCP.generatePredictiveInsights(analyticsResult.data)
-				if (predictionsResult.success && predictionsResult.data) {
-					setPredictions(predictionsResult.data)
-				}
+	// 			// Generate predictions
+	// 			const predictionsResult = await analyticsMCP.generatePredictiveInsights(analyticsResult.data)
+	// 			if (predictionsResult.success && predictionsResult.data) {
+	// 				setPredictions(predictionsResult.data)
+	// 			}
 
-				// Compare with benchmarks
-				const benchmarksResult = await analyticsMCP.compareWithBenchmarks(analyticsResult.data)
-				if (benchmarksResult.success && benchmarksResult.data) {
-					setBenchmarks(benchmarksResult.data)
-				}
-			} else {
-				setError('Failed to analyze form performance')
-			}
-		} catch (err) {
-			setError('Error analyzing form: ' + (err as Error).message)
-		} finally {
-			setLoading(false)
-		}
-	}, [form, analyticsMCP])
+	// 			// Compare with benchmarks
+	// 			const benchmarksResult = await analyticsMCP.compareWithBenchmarks(analyticsResult.data)
+	// 			if (benchmarksResult.success && benchmarksResult.data) {
+	// 				setBenchmarks(benchmarksResult.data)
+	// 			}
+	// 		} else {
+	// 			setError('Failed to analyze form performance')
+	// 		}
+	// 	} catch (err) {
+	// 		setError('Error analyzing form: ' + (err as Error).message)
+	// 	} finally {
+	// 		setLoading(false)
+	// 	}
+	// }, [form, analyticsMCP])
 
-	useEffect(() => {
-		if (form && fields.length > 0) {
-			analyzeForm()
-		}
-	}, [form, fields, analyzeForm])
+	// useEffect(() => {
+	// 	if (form && fields.length > 0) {
+	// 		analyzeForm()
+	// 	}
+	// }, [form, fields, analyzeForm])
 
 	// const getImpactColor = (impact: string) => {
 	// 	switch (impact) {
@@ -163,6 +163,15 @@ export default function FormAnalyticsPanel({
 		)
 	}
 
+	return (
+		<Card className={`h-full ${className}`}>
+			<div className='text-center p-4'>
+				<p className='text-gray-400'>Form Analytics Panel - Coming Soon</p>
+			</div>
+		</Card>
+	)
+
+	/* Original implementation commented out for build compatibility
 	return (
 		<Card className={`h-full ${className}`}>
 			<div className='p-4 border-b border-gray-600'>
@@ -550,3 +559,4 @@ function getPerformanceColor(performance: string) {
 			return 'info'
 	}
 }
+*/

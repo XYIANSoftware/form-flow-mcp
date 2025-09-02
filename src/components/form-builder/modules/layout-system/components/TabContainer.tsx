@@ -150,7 +150,7 @@ export default function TabContainer({
 					onTabChange={e => setActiveTab(e.index)}
 					className='tab-container'
 				>
-					{tabs.map((tab, index) => (
+					{tabs.map((tab) => (
 						<TabPanel
 							key={tab.id}
 							header={

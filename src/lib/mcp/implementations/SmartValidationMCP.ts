@@ -478,7 +478,7 @@ export class SmartValidationMCP {
 
 	private validateUrl(
 		value: unknown,
-		rule: ValidationRule
+		// rule: ValidationRule
 	): { isValid: boolean; suggestion?: string } {
 		if (typeof value !== 'string') return { isValid: false }
 		const pattern = this.fieldPatterns.get('url')
@@ -552,7 +552,7 @@ export class SmartValidationMCP {
 	}
 
 	private validateCustom(
-		_value: unknown
+		// _value: unknown
 	): { isValid: boolean; suggestion?: string } {
 		// Custom validation logic would be implemented here
 		// For now, return true as placeholder
@@ -566,8 +566,8 @@ export class SmartValidationMCP {
 	}
 
 	private async validateCrossFieldRules(
-		fields: FieldContext[],
-		rules: ValidationRule[]
+		// fields: FieldContext[],
+		// rules: ValidationRule[]
 	): Promise<{ errors: ValidationError[]; warnings: ValidationWarning[] }> {
 		const errors: ValidationError[] = []
 		const warnings: ValidationWarning[] = []
@@ -584,8 +584,8 @@ export class SmartValidationMCP {
 	}
 
 	private async validateBusinessLogic(
-		fields: FieldContext[],
-		rules: ValidationRule[]
+		// fields: FieldContext[],
+		// rules: ValidationRule[]
 	): Promise<{ errors: ValidationError[]; warnings: ValidationWarning[] }> {
 		const errors: ValidationError[] = []
 		const warnings: ValidationWarning[] = []

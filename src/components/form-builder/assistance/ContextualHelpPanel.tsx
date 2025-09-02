@@ -86,9 +86,9 @@ const HelpActionButton: React.FC<HelpActionButtonProps> = ({
 	return (
 		<Button
 			label={action.label}
-			icon={action.icon || getActionIcon(action.type)}
-			size='small'
-			className='p-button-sm'
+																icon={action.icon || getActionIcon(action.type)}
+													size='small'
+													className='p-button-sm'
 			severity={getActionSeverity(action.type)}
 			onClick={() => onClick(action)}
 		/>
@@ -104,15 +104,6 @@ const ContextualHelpPanel: React.FC<ContextualHelpPanelProps> = ({
 	const [error, setError] = useState<string | null>(null)
 	const [helpContent, setHelpContent] = useState<HelpContent | null>(null)
 	const [isVisible, setIsVisible] = useState(true)
-
-	useEffect(() => {
-		loadContextualHelp()
-	}, [
-		userContext.currentAction,
-		userContext.currentField,
-		userContext.currentForm,
-		loadContextualHelp,
-	])
 
 	const loadContextualHelp = useCallback(async () => {
 		setLoading(true)
@@ -132,6 +123,15 @@ const ContextualHelpPanel: React.FC<ContextualHelpPanelProps> = ({
 			setLoading(false)
 		}
 	}, [userContext])
+
+	useEffect(() => {
+		loadContextualHelp()
+	}, [
+		userContext.currentAction,
+		userContext.currentField,
+		userContext.currentForm,
+		loadContextualHelp,
+	])
 
 	const handleHelpAction = (action: HelpAction) => {
 		console.log('Help action triggered:', action)
@@ -173,10 +173,10 @@ const ContextualHelpPanel: React.FC<ContextualHelpPanelProps> = ({
 			<Card className={`contextual-help-panel ${className}`}>
 				<div className='text-center p-4'>
 					<Button
-						label='Show Help'
-						icon='pi pi-question-circle'
-						size='small'
-						className='p-button-text'
+																			label='Show Help'
+													icon='pi pi-question-circle'
+													size='small'
+													className='p-button-text'
 						onClick={() => setIsVisible(true)}
 					/>
 				</div>
@@ -208,9 +208,9 @@ const ContextualHelpPanel: React.FC<ContextualHelpPanelProps> = ({
 						Contextual Help
 					</h5>
 					<Button
-						icon='pi pi-times'
-						size='small'
-						className='p-button-text p-button-sm'
+																			icon='pi pi-times'
+													size='small'
+													className='p-button-text p-button-sm'
 						onClick={handleClose}
 					/>
 				</div>
@@ -278,7 +278,7 @@ const ContextualHelpPanel: React.FC<ContextualHelpPanelProps> = ({
 											key={`topic-${index}`}
 											value={topic}
 											severity='info'
-											size='small'
+																								size='normal'
 											className='cursor-pointer hover:opacity-80'
 											onClick={() => {
 												console.log('Related topic clicked:', topic)
@@ -296,10 +296,10 @@ const ContextualHelpPanel: React.FC<ContextualHelpPanelProps> = ({
 							<Divider />
 							<div className='text-center'>
 								<Button
-									label='Watch Video Tutorial'
-									icon='pi pi-play'
-									size='small'
-									className='p-button-outlined'
+																						label='Watch Video Tutorial'
+													icon='pi pi-play'
+													size='small'
+													className='p-button-outlined'
 									onClick={() => {
 										console.log('Opening video:', helpContent.videoUrl)
 										// Handle video opening
@@ -314,10 +314,10 @@ const ContextualHelpPanel: React.FC<ContextualHelpPanelProps> = ({
 			{/* Refresh Button */}
 			<div className='flex justify-end mt-4'>
 				<Button
-					label='Refresh Help'
-					icon='pi pi-refresh'
-					size='small'
-					className='p-button-sm p-button-text'
+																		label='Refresh Help'
+													icon='pi pi-refresh'
+													size='small'
+													className='p-button-sm p-button-text'
 					onClick={loadContextualHelp}
 					loading={loading}
 				/>

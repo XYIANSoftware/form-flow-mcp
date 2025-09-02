@@ -215,7 +215,7 @@ export default function ConsoleLogViewer() {
 												<div className='text-white font-mono text-xs break-all'>
 													{log.message}
 												</div>
-												{log.data && (
+												{log.data ? (
 													<details className='mt-1'>
 														<summary className='text-gray-400 text-xs cursor-pointer'>
 															Data (
@@ -223,10 +223,10 @@ export default function ConsoleLogViewer() {
 															items)
 														</summary>
 														<pre className='text-xs text-gray-300 mt-1 bg-gray-900 p-2 rounded overflow-auto'>
-															{JSON.stringify(log.data, null, 2)}
+															{JSON.stringify(log.data as Record<string, unknown>, null, 2)}
 														</pre>
 													</details>
-												)}
+												) : null}
 											</div>
 										</div>
 									</div>

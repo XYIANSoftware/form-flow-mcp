@@ -968,7 +968,7 @@ export class FormAssistanceMCP {
 	 */
 	private static generateFieldsForPurpose(
 		purpose: string,
-		_industry?: string
+		// _industry?: string
 	): FormField[] {
 		const baseFields: FormField[] = []
 

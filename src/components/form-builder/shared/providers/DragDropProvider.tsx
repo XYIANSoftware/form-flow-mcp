@@ -46,7 +46,7 @@ export default function DragDropProvider({
 	fields,
 	onFieldsChange,
 	onFieldAdd,
-	onFieldMove,
+	// onFieldMove,
 	onFieldSelect,
 }: DragDropProviderProps) {
 	const [activeId, setActiveId] = useState<string | null>(null)

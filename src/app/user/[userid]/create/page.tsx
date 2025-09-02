@@ -274,26 +274,18 @@ export default function CreateForm({ params }: CreateFormProps) {
 									executionTime={mcpExecutionTime}
 								/>
 
-								<MCPPerformanceDisplay
-									operation='Form Generation'
-									executionTime={mcpExecutionTime}
-									status={mcpStatus}
-								/>
+								<MCPPerformanceDisplay />
 
-								<MCPHealthDashboard
-									operations={[
-										'Field Validation',
-										'Form Generation',
-										'CSV Processing',
-									]}
-									lastChecked={new Date()}
-								/>
+								<MCPHealthDashboard />
 
 								{mcpError && (
 									<MCPErrorDisplay
-										error={mcpError}
-										operation='Form Builder'
-										onDismiss={() => setMcpError('')}
+										errors={[{
+											code: 'FORM_ERROR',
+											message: mcpError,
+											timestamp: new Date(),
+											details: { context: 'Form Builder' }
+										}]}
 									/>
 								)}
 
